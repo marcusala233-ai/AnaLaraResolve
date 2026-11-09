@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3B0A14">
+<meta name="color-scheme" content="dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Catedral de Speculative UX e Foresight — decretos falseaveis com procedencia declarada e regua deterministica.">
+<link rel="manifest" href='data:application/json,{"name":"TICTIC Catedral","short_name":"Catedral","start_url":".","display":"standalone","background_color":"%233B0A14","theme_color":"%233B0A14","icons":[]}'>
+<title>TICTIC — Catedral de Speculative UX</title>
+<style>
+:root{
+  --vinho-fundo:#3B0A14;
+  --vinho-profundo:#27060D;
+  --vinho-carne:#54101F;
+  --vinho-vivo:#8F1531;
+  --ouro:#D4AF37;
+  --champanhe:#EADFC2;
+  --pergaminho:#F7EFE4;
+  --rosa:#D6B2BA;
+  --traco:rgba(234,223,194,.10);
+  --borda:rgba(212,175,55,.30);
+  --verde:#5FAE7C;
+  --ambar:#D9A441;
+  --cinza:#9A8290;
+  --toque:46px;
+  --seguro-b:env(safe-area-inset-bottom,0px);
+  --seguro-t:env(safe-area-inset-top,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:
+    radial-gradient(120% 60% at 50% 0%, #6A1024 0%, transparent 60%),
+    linear-gradient(180deg,#4A0C1A 0%, var(--vinho-fundo) 45%, var(--vinho-profundo) 100%);
+  background-attachment:fixed;
+  color:var(--pergaminho);
+  font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  font-size:16px;line-height:1.55;min-height:100dvh;overflow-x:hidden;
+  padding-bottom:calc(72px + var(--seguro-b));
+}
+#tracos{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.85}
+.conteudo{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 14px}
+.mono{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--champanhe)}
+
+/* ---------- topo ---------- */
+.barra{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:8px;
+  padding:calc(8px + var(--seguro-t)) 14px 8px;background:rgba(39,6,13,.88);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--borda)}
+.brasao{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid var(--ouro);
+  background:rgba(84,16,31,.5);border-radius:3px;flex:0 0 auto}
+#estadoWard{text-align:right;font-size:.6rem;line-height:1.3;max-width:52%}
+
+.heroi{padding:22px 0 16px;text-align:center}
+.lema{font-size:.66rem;letter-spacing:.2em;color:var(--ouro);text-transform:uppercase;
+  font-family:ui-monospace,Menlo,monospace}
+h1{font-size:clamp(1.45rem,7vw,2.2rem);line-height:1.12;margin:.4rem 0 .5rem;
+  text-shadow:0 3px 20px rgba(143,21,49,.9);font-weight:700;letter-spacing:.01em}
+.sub{font-size:.95rem;color:var(--rosa);font-style:italic;max-width:46ch;margin:0 auto}
+
+.dedicatoria{margin:16px 0 4px;padding:12px 14px;border:1px solid var(--ouro);border-radius:6px;
+  background:linear-gradient(135deg,rgba(143,21,49,.42),rgba(39,6,13,.72));text-align:center;
+  box-shadow:0 6px 24px rgba(0,0,0,.45)}
+.dedicatoria .rot{font-size:.6rem;letter-spacing:.22em;color:var(--ouro);text-transform:uppercase;
+  font-family:ui-monospace,Menlo,monospace}
+.dedicatoria .nome{font-size:1.22rem;color:var(--pergaminho);margin-top:3px;letter-spacing:.02em}
+.dedicatoria .nota{font-size:.84rem;color:var(--rosa);font-style:italic;margin-top:3px}
+
+/* ---------- abas ---------- */
+.abas{position:fixed;left:0;right:0;bottom:0;z-index:6;display:grid;grid-template-columns:repeat(4,1fr);
+  background:rgba(27,4,9,.96);backdrop-filter:blur(12px);border-top:1px solid var(--borda);
+  padding-bottom:var(--seguro-b)}
+.aba{min-height:var(--toque);border:0;background:none;color:var(--rosa);font-family:inherit;font-size:.72rem;
+  letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:10px 2px 8px;position:relative}
+.aba[aria-selected="true"]{color:var(--ouro)}
+.aba[aria-selected="true"]::after{content:'';position:absolute;top:0;left:18%;right:18%;height:2px;background:var(--ouro)}
+.painel{display:none;padding-top:8px}
+.painel.ativo{display:block}
+
+/* ---------- blocos ---------- */
+.camara{background:linear-gradient(165deg,rgba(84,16,31,.5),rgba(27,6,13,.78));
+  border:1px solid var(--borda);border-radius:8px;padding:16px 14px;margin-bottom:14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.camara > h2{font-size:1.06rem;color:var(--champanhe);letter-spacing:.03em;margin-bottom:3px}
+.camara > .desc{font-size:.88rem;color:var(--rosa);margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid var(--traco)}
+
+label{display:block;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ouro);
+  margin-bottom:4px;font-family:ui-monospace,Menlo,monospace}
+.dica{font-family:inherit;text-transform:none;letter-spacing:0;font-size:.82rem;color:var(--rosa);
+  font-style:italic;display:block;margin:-2px 0 5px}
+.campo{margin-bottom:13px}
+select,input[type=text],input[type=date],textarea{width:100%;min-height:var(--toque);padding:11px 12px;
+  background:rgba(20,3,8,.92);border:1px solid var(--borda);color:var(--pergaminho);
+  font-family:inherit;font-size:1rem;border-radius:5px;appearance:none}
+textarea{min-height:76px;resize:vertical;line-height:1.45}
+select:focus,input:focus,textarea:focus{outline:2px solid var(--ouro);outline-offset:1px}
+input[type=range]{width:100%;height:var(--toque);accent-color:var(--ouro);background:none;border:0}
+.linha2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:380px){.linha2{grid-template-columns:1fr}}
+
+.btn{min-height:var(--toque);width:100%;padding:12px;border:1px solid var(--ouro);border-radius:5px;
+  background:linear-gradient(135deg,var(--vinho-vivo),var(--vinho-carne));color:var(--pergaminho);
+  font-family:ui-monospace,Menlo,monospace;font-size:.76rem;letter-spacing:.11em;text-transform:uppercase;
+  cursor:pointer;font-weight:600}
+.btn:active{filter:brightness(1.25)}
+.btn.fino{background:rgba(84,16,31,.55);font-weight:400}
+.btn-linha{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.btn-linha.tres{grid-template-columns:1fr 1fr 1fr}
+
+/* ---------- decreto ---------- */
+.faixa{font-family:ui-monospace,Menlo,monospace;font-size:.63rem;letter-spacing:.07em;padding:9px 11px;
+  border-radius:4px;border:1px solid currentColor;margin-bottom:12px;line-height:1.5}
+.ok{color:var(--verde)} .ensaio{color:var(--ambar)}
+.bacia{background:radial-gradient(circle at 50% 10%,rgba(143,21,49,.35),rgba(20,3,8,.9));
+  border:1px solid var(--traco);border-radius:7px;padding:13px;margin-bottom:12px}
+.bacia .ala{font-size:.74rem;color:var(--ouro);letter-spacing:.05em;display:block;margin-bottom:5px;
+  font-family:ui-monospace,Menlo,monospace}
+.pilares{display:grid;gap:9px}
+.pilar{background:rgba(20,3,8,.72);border:1px solid var(--traco);border-top:2px solid var(--ouro);
+  padding:11px;border-radius:4px}
+.pilar h4{font-size:.63rem;color:var(--ouro);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;
+  font-family:ui-monospace,Menlo,monospace}
+.pilar p{font-size:.95rem;color:var(--pergaminho)}
+
+/* ---------- radar ---------- */
+#radarWrap{position:relative;background:radial-gradient(circle at center,#45101F,#1A0309);
+  border:1px solid var(--borda);border-radius:6px;overflow:hidden}
+#radar{width:100%;height:230px;display:block}
+.lista{list-style:none;display:grid;gap:8px;margin-top:10px;max-height:46vh;overflow-y:auto;
+  -webkit-overflow-scrolling:touch}
+.sinal{padding:10px 11px;background:rgba(84,16,31,.4);border-left:3px solid var(--ouro);border-radius:4px;
+  cursor:pointer;min-height:var(--toque)}
+.sinal:active{background:rgba(143,21,49,.6)}
+.sinal b{display:block;font-size:.9rem;color:var(--champanhe)}
+.sinal .ac{display:block;font-size:.85rem;color:var(--rosa)}
+.etiq{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:.55rem;letter-spacing:.08em;
+  padding:2px 6px;border-radius:2px;margin-top:5px;border:1px solid currentColor}
+.o-COLETADO{color:var(--verde)} .o-INFERIDO{color:var(--ambar)} .o-SINTETICO{color:var(--cinza)}
+
+/* ---------- arquivo / brier ---------- */
+.placar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.ficha{background:rgba(20,3,8,.75);border:1px solid var(--traco);border-radius:5px;padding:10px 8px;text-align:center}
+.ficha .n{font-size:1.5rem;color:var(--ouro);line-height:1.1;font-variant-numeric:tabular-nums}
+.ficha .r{font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--rosa);
+  font-family:ui-monospace,Menlo,monospace;margin-top:2px;display:block}
+.arq{background:rgba(20,3,8,.7);border:1px solid var(--traco);border-left:3px solid var(--cinza);
+  border-radius:4px;padding:11px;margin-bottom:9px}
+.arq.v{border-left-color:var(--verde)} .arq.f{border-left-color:var(--vinho-vivo)}
+.arq .cab{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.arq .idc{font-family:ui-monospace,Menlo,monospace;font-size:.58rem;color:var(--ouro)}
+.arq .crit{font-size:.92rem;color:var(--pergaminho);margin:5px 0}
+.arq .met{font-family:ui-monospace,Menlo,monospace;font-size:.58rem;color:var(--rosa);line-height:1.6}
+.jul{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px}
+.jul button{min-height:38px;border:1px solid var(--borda);background:rgba(39,6,13,.7);color:var(--rosa);
+  border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:.6rem;letter-spacing:.06em;cursor:pointer}
+.jul button.sim{color:var(--verde)} .jul button.nao{color:var(--vinho-vivo)}
+table.calib{width:100%;border-collapse:collapse;font-family:ui-monospace,Menlo,monospace;font-size:.62rem;margin-top:10px}
+table.calib th,table.calib td{border:1px solid var(--traco);padding:6px 4px;text-align:center;color:var(--rosa)}
+table.calib th{color:var(--ouro);letter-spacing:.06em}
+
+/* ---------- regua ---------- */
+.grade{display:grid;gap:7px;margin-top:10px}
+.chk{background:rgba(20,3,8,.7);border:1px solid var(--traco);border-left:3px solid var(--verde);
+  padding:9px 11px;border-radius:4px}
+.chk.mal{border-left-color:var(--vinho-vivo)}
+.chk .c{font-family:ui-monospace,Menlo,monospace;font-size:.56rem;color:var(--ouro);letter-spacing:.08em}
+.chk .t{font-size:.9rem;color:var(--rosa);display:block;margin-top:2px}
+.chk .d{font-family:ui-monospace,Menlo,monospace;font-size:.56rem;color:var(--champanhe);opacity:.7;
+  display:block;margin-top:3px;word-break:break-word}
+details{border:1px solid var(--traco);border-radius:5px;margin-top:10px;background:rgba(20,3,8,.6)}
+summary{padding:11px 12px;cursor:pointer;font-family:ui-monospace,Menlo,monospace;font-size:.66rem;
+  letter-spacing:.08em;color:var(--ouro);text-transform:uppercase;min-height:var(--toque);display:flex;align-items:center}
+details .corpo{padding:0 12px 12px;font-size:.9rem;color:var(--rosa)}
+details .corpo b{color:var(--champanhe)}
+pre.json{background:#140308;border:1px solid var(--traco);padding:10px;border-radius:4px;
+  font-family:ui-monospace,Menlo,monospace;font-size:.6rem;color:var(--champanhe);overflow-x:auto;
+  max-height:230px;margin-top:10px;line-height:1.5}
+.rodape{text-align:center;font-size:.72rem;color:var(--rosa);opacity:.65;padding:18px 0 6px;line-height:1.6}
+
+/* ---------- celula UROBOROS ---------- */
+.celula{margin:4px 0 12px;padding:12px 10px;border:1px solid var(--borda);border-radius:7px;
+  background:linear-gradient(170deg,rgba(20,3,8,.94),rgba(39,6,13,.9))}
+.cel-topo{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.cel-tit{font-family:ui-monospace,Menlo,monospace;font-size:.7rem;letter-spacing:.14em;color:var(--ouro);text-transform:uppercase}
+.cel-sub{font-family:ui-monospace,Menlo,monospace;font-size:.55rem;letter-spacing:.05em;color:var(--rosa)}
+.fma{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:#090103;border:1px solid #2E1219;border-radius:4px;margin-bottom:10px}
+.fma-c{min-width:0;padding:6px 3px 5px;border-right:1px solid #2E1219;text-align:center;font-family:ui-monospace,Menlo,monospace}
+.fma-c:last-child{border-right:0}
+.fma-r{display:block;font-size:.46rem;letter-spacing:.08em;color:#8E7A82;margin-bottom:2px}
+.fma-c b{display:block;font-size:.54rem;font-weight:600;line-height:1.25;overflow-wrap:anywhere;color:#8E7A82}
+.fma-c b.man{color:#6FD18F} .fma-c b.sel{color:#64CFE0} .fma-c b.blq{color:var(--ambar)} .fma-c b.pare{color:#F06A85}
+.argons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:8px}
+.quorum{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:8px}
+.rod{grid-column:1/-1;font-family:ui-monospace,Menlo,monospace;font-size:.5rem;letter-spacing:.12em;color:#8E7A82;margin-top:2px}
+.no{min-width:0;border:1px solid var(--traco);border-left:3px solid var(--cinza);border-radius:4px;padding:6px 7px;
+  background:rgba(20,3,8,.78);font-family:ui-monospace,Menlo,monospace}
+.no span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.no .i{font-size:.6rem;color:var(--champanhe);letter-spacing:.05em}
+.no .p{font-size:.52rem;color:var(--rosa);letter-spacing:.04em}
+.no .m{font-size:.5rem;color:#8E7A82}
+.no .e{font-size:.5rem;letter-spacing:.05em;color:var(--champanhe);margin-top:2px}
+.no.argon{border-top:1px solid rgba(212,175,55,.5)}
+.no[data-e="ativo"]{border-left-color:var(--ouro);animation:pulsar 1.3s ease-in-out infinite}
+.no[data-e="pronto"],.no[data-e="limpo"]{border-left-color:var(--verde)}
+.no[data-e="devolvido"]{border-left-color:var(--ambar)}
+.no[data-e="isolado"]{border-left-color:var(--vinho-vivo);opacity:.72}
+.no[data-e="isolado"] .i,.no[data-e="isolado"] .p{text-decoration:line-through}
+.no[data-e="erro"],.no[data-e="falhou"],.no[data-e="rejeitado"]{border-left-color:#F06A85;border-style:dashed}
+@keyframes pulsar{50%{background:rgba(84,16,31,.85)}}
+.guardas{list-style:none;display:grid;gap:4px;margin:4px 0 8px;font-family:ui-monospace,Menlo,monospace;font-size:.56rem;letter-spacing:.03em;color:var(--rosa)}
+.guardas li{display:grid;grid-template-columns:1rem 1fr;gap:5px;align-items:baseline;line-height:1.5}
+.guardas li b{color:var(--champanhe);font-weight:600}
+.guardas .n{color:var(--ouro)}
+.tele{display:block;font-family:ui-monospace,Menlo,monospace;font-size:.56rem;border-top:1px solid var(--traco);padding:8px 0}
+.tele span{display:block}
+.tele .h{color:var(--ouro);overflow-wrap:anywhere;margin-bottom:3px}
+.tele .a{color:var(--ambar);margin-bottom:3px}
+.tele .x{white-space:pre-wrap;color:var(--rosa);font-family:'Iowan Old Style',Palatino,Georgia,serif;font-size:.84rem;letter-spacing:0}
+
+/* ---------- pergaminho impresso ---------- */
+#pergaminho{display:none}
+@media print{
+  body *{visibility:hidden}
+  body{background:#F4EAD2 !important;color:#23120B !important;padding:0}
+  #tracos,.abas,.barra{display:none !important}
+  #pergaminho,#pergaminho *{visibility:visible}
+  #pergaminho{display:block;position:absolute;left:0;top:0;width:100%;padding:12mm;background:#F4EAD2;
+    color:#23120B;font-family:Georgia,serif}
+  .rolo{border:3px double #5E0D20;padding:14mm 12mm;background:#FAF3E0;position:relative;min-height:250mm}
+  .rolo h2{font-size:1.5rem;color:#5E0D20;letter-spacing:.12em;text-align:center}
+  .rolo .cab{text-align:center;border-bottom:2px solid #5E0D20;padding-bottom:7mm;margin-bottom:8mm}
+  .rolo section{margin-bottom:6mm}
+  .rolo h4{font-size:.92rem;color:#6B0F24;text-transform:uppercase;letter-spacing:.06em;
+    border-bottom:1px solid rgba(94,13,32,.3);margin-bottom:2mm}
+  .rolo p{font-size:1rem;color:#2D150D}
+  .selo{position:absolute;bottom:14mm;right:12mm;width:30mm;height:30mm;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;text-align:center;font-size:.58rem;
+    font-weight:700;letter-spacing:.06em;line-height:1.3;transform:rotate(-11deg);
+    background:#6B0F24;color:#F7EFE4;border:3px solid #8F1531}
+  .selo.ens{background:#F4EAD2;color:#7A5B1E;border:3px dashed #A8852F}
+  .rodape-rolo{margin-top:10mm;padding-top:4mm;border-top:1px solid rgba(94,13,32,.3);
+    font-family:ui-monospace,monospace;font-size:.6rem;color:#5E0D20;max-width:62%}
+  .marca-agua{position:absolute;left:50%;top:50%;width:62%;transform:translate(-50%,-50%);opacity:.07;pointer-events:none}
+  .marca-agua svg{width:100%;height:auto}
+  @page{size:A4;margin:0}
+}
+/* ---------- brasao da Catedral, mancha de Rorschach e ornamentos de psicologia ---------- */
+.brasao-palco{position:relative;display:grid;place-items:center;margin:2px auto 0;max-width:420px;height:min(80vw,336px)}
+#mancha{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.brasao-botao{position:relative;z-index:1;background:none;border:0;padding:0;margin:0;cursor:pointer;width:min(62vw,248px)}
+.brasao-botao svg{display:block;width:100%;height:auto;filter:drop-shadow(0 10px 24px rgba(0,0,0,.6))}
+.brasao-botao:focus-visible{outline:2px solid var(--ouro);outline-offset:6px;border-radius:10px}
+.brasao-botao:active svg{transform:scale(.985)}
+.legenda-mancha{display:block;margin:0 0 12px;opacity:.72;font-size:.58rem}
+.psi{display:block;font-family:Georgia,'Times New Roman',serif;font-size:1.5rem;line-height:1;color:var(--ouro);margin:2px 0 0}
+.pilar-psi{overflow:hidden}
+.iceberg{float:right;width:138px;height:auto;margin:-4px -4px 4px 10px}
+.neuro-div{display:block;margin:8px auto 4px;max-width:440px}
+.neuro-div svg{display:block;width:100%;height:24px}
+@media(prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+
+<svg id="tracos" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="tracaria" width="150" height="190" patternUnits="userSpaceOnUse">
+      <g fill="none" stroke="rgba(234,223,194,0.095)" stroke-width="1" stroke-linecap="round">
+        <path d="M18 188 L18 92 Q75 24 132 92 L132 188"/>
+        <path d="M42 188 L42 112 Q75 68 108 112 L108 188"/>
+        <path d="M75 188 L75 72"/>
+        <circle cx="75" cy="86" r="11"/>
+        <path d="M56 104 Q75 92 94 104"/>
+        <path d="M0 188 L150 188"/>
+      </g>
+      <text x="64" y="150" font-family="Georgia,serif" font-size="15" fill="rgba(212,175,55,0.075)">Ψ</text>
+      <g fill="none" stroke="rgba(212,175,55,0.055)" stroke-width=".7">
+        <path d="M-10 40 L160 -20 M-10 120 L160 60 M-10 200 L160 140"/>
+      </g>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#tracaria)"/>
+</svg>
+
+<header class="barra">
+  <span class="brasao mono">TICTIC</span>
+  <span class="mono" id="estadoWard">INICIANDO…</span>
+</header>
+
+<div class="conteudo">
+
+  <section class="heroi">
+    <div class="brasao-palco">
+      <canvas id="mancha" aria-hidden="true"></canvas>
+      <button type="button" class="brasao-botao" id="brasao" aria-label="Brasão da Catedral. Toque para gerar outra mancha de Rorschach."></button>
+    </div>
+    <span class="legenda-mancha mono" id="legendaMancha">Mancha de Rorschach · toque no brasão: que forma você vê?</span>
+    <p class="lema">Speculative UX &amp; Foresight</p>
+    <h1>Catedral de Foresight</h1>
+    <p class="sub">Decretos que podem errar — com procedência declarada e régua determinística.</p>
+    <div class="dedicatoria">
+      <span class="rot">Este painel é para as dúvidas da</span>
+      <span class="psi" aria-hidden="true">Ψ</span>
+      <div class="nome">Ana Lara</div>
+      <span class="nota">Pergunte sem medo. Aqui toda afirmação diz de onde veio.</span>
+    </div>
+    <div class="neuro-div" aria-hidden="true"><svg viewBox="0 0 320 24" preserveAspectRatio="xMidYMid meet">
+      <g fill="none" stroke="#D4AF37" stroke-linecap="round" opacity=".7">
+        <path d="M6,12 H136" stroke-width="1"/><path d="M184,12 H314" stroke-width="1"/>
+        <path d="M150,12 C142,6 136,4 126,3" stroke-width="1.1"/><path d="M150,12 C142,18 136,20 128,21" stroke-width="1.1"/>
+        <path d="M170,12 C178,6 184,4 194,3" stroke-width="1.1"/><path d="M170,12 C178,18 184,20 192,21" stroke-width="1.1"/>
+      </g>
+      <circle cx="160" cy="12" r="6.5" fill="rgba(212,175,55,.18)" stroke="#D4AF37" stroke-width="1.2"/>
+      <circle cx="160" cy="12" r="2.4" fill="#D4AF37"/>
+      <g fill="#D4AF37" opacity=".8"><circle cx="126" cy="3" r="1.6"/><circle cx="128" cy="21" r="1.6"/><circle cx="194" cy="3" r="1.6"/><circle cx="192" cy="21" r="1.6"/><circle cx="6" cy="12" r="2"/><circle cx="314" cy="12" r="2"/></g>
+    </svg></div>
+  </section>
+
+  <!-- ============ DECRETO ============ -->
+  <div class="painel ativo" id="p-decreto" role="tabpanel">
+    <div class="camara">
+      <h2>Altar das Escadarias Mutáveis</h2>
+      <p class="desc">Os três últimos campos decidem o selo. Sem eles o decreto não pode errar — e o que não pode errar não pode acertar.</p>
+      <form id="formulario">
+        <div class="campo">
+          <label for="horizonte">Torre temporal</label>
+          <select id="horizonte">
+            <option value="2030">Torre de Astronomia — 2030</option>
+            <option value="2035" selected>Câmara da Penseira — 2035</option>
+            <option value="2045">Sala Precisa — 2045</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="setor">Relíquia &amp; vetor estético</label>
+          <select id="setor">
+            <option value="pensieve_ux">Bacias de memória diegética</option>
+            <option value="marauder_telemetry">Cartografia preditiva em pergaminho vivo</option>
+            <option value="sanctuary_vault">Câmaras de isolamento cognitivo</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="filosofia">Grimório filosófico</label>
+          <select id="filosofia">
+            <option value="restricted_section">Seção Reservada &amp; Protocolo Shisui</option>
+            <option value="heidegger_castle">Habitação gótica — Heidegger</option>
+            <option value="alchemy_flamel">Transmutação alquímica</option>
+            <option value="moving_stairs">Escadarias mutáveis — Heráclito</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="psicologia">Espelho psicológico</label>
+          <select id="psicologia">
+            <option value="mirror_erised">O Espelho de Ojesed</option>
+            <option value="pensieve_extraction">A Penseira de Pedra</option>
+            <option value="marauder_radar">O Mapa do Maroto</option>
+            <option value="room_requirement">Arquétipo da Sala Precisa</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="sinal">Sinal fraco rastreado</label>
+          <input type="text" id="sinal" placeholder="Toque num sinal no Radar, ou escreva aqui" autocomplete="off">
+        </div>
+        <div class="campo">
+          <label for="origem">Procedência do sinal</label>
+          <span class="dica">COLETADO exige fonte verificável. SINTÉTICO é hipótese — e sai carimbado como tal.</span>
+          <select id="origem">
+            <option value="SINTETICO" selected>SINTÉTICO — inventado para ensaio</option>
+            <option value="INFERIDO">INFERIDO — derivado de algo coletado</option>
+            <option value="COLETADO">COLETADO — tem fonte</option>
+          </select>
+        </div>
+        <div class="campo" id="campoFonte" hidden>
+          <label for="fonte">Fonte</label>
+          <input type="text" id="fonte" placeholder="URL, documento, página" autocomplete="off">
+        </div>
+        <div class="linha2">
+          <div class="campo">
+            <label for="dataRes">Data de resolução</label>
+            <input type="date" id="dataRes">
+          </div>
+          <div class="campo">
+            <label for="conf">Confiança: <span id="confTxt">60%</span></label>
+            <input type="range" id="conf" min="5" max="95" step="5" value="60">
+          </div>
+        </div>
+        <div class="campo">
+          <label for="criterio">Critério de resolução</label>
+          <span class="dica">A frase que naquela data será verdadeira ou falsa sem discussão.</span>
+          <textarea id="criterio" placeholder="Ex.: pelo menos 3 das 10 maiores gestoras do país terão publicado política formal de isolamento cognitivo."></textarea>
+        </div>
+        <button type="submit" class="btn">Conjurar síntese</button>
+      </form>
+    </div>
+
+    <div class="camara">
+      <h2>Bacia da Penseira</h2>
+      <p class="desc" id="idDecreto">Aguardando</p>
+      <div class="faixa ensaio" id="faixaSelo">SELO: aguardando síntese</div>
+      <div class="bacia">
+        <span class="ala" id="oAla">—</span>
+        <p id="oZeit"></p>
+        <p id="oSinal" style="color:var(--champanhe);font-style:italic;margin-top:6px;font-size:.93rem"></p>
+        <p id="oCrit" style="color:var(--rosa);font-size:.88rem;margin-top:6px"></p>
+      </div>
+      <div class="pilares">
+        <div class="pilar"><h4>I · Arte — relíquia diegética</h4><p id="oArte">—</p></div>
+        <div class="pilar"><h4>II · Filosofia — Seção Reservada</h4><p id="oFilo">—</p></div>
+        <div class="pilar pilar-psi"><svg class="iceberg" viewBox="0 0 150 78" aria-hidden="true">
+          <path d="M0,24 Q9,20 18,24 T36,24 T54,24 T72,24 T90,24" fill="none" stroke="#D9B8BF" stroke-width="1" opacity=".55"/>
+          <path d="M30,24 L40,7 L46,13 L52,4 L60,24 Z" fill="#F4EAD9" opacity=".88"/>
+          <path d="M24,24 L66,24 L80,44 L72,68 L46,76 L22,62 L16,40 Z" fill="rgba(212,175,55,.16)" stroke="#D4AF37" stroke-width=".8"/>
+          <path d="M18,44 H78" stroke="#D4AF37" stroke-width=".6" stroke-dasharray="2 3" opacity=".7"/>
+          <g font-family="ui-monospace,Menlo,monospace" font-size="7.2" fill="#D9B8BF">
+            <text x="88" y="12">consciente</text><text x="88" y="36">pré-consciente</text><text x="88" y="62">inconsciente</text>
+          </g>
+        </svg><h4>III · Psicologia — Espelho de Ojesed</h4><p id="oPsico">—</p></div>
+        <div class="pilar"><h4>IV · Vendas — Sala Precisa</h4><p id="oVendas">—</p></div>
+      </div>
+      <section class="celula" id="painelCelula" aria-label="Célula UROBOROS" hidden>
+        <div class="cel-topo"><span class="cel-tit">Célula UROBOROS</span><span class="cel-sub" id="celRoster">3 Argon · 8 nós · 2 famílias</span></div>
+        <div class="fma" id="fma" role="status" aria-live="polite">
+          <div class="fma-c"><span class="fma-r">LEI</span><b id="fmaLei">—</b></div>
+          <div class="fma-c"><span class="fma-r">FATO</span><b id="fmaFato">—</b></div>
+          <div class="fma-c"><span class="fma-r">NÚMERO</span><b id="fmaNum">—</b></div>
+          <div class="fma-c"><span class="fma-r">INFERÊNCIA</span><b id="fmaInf">—</b></div>
+          <div class="fma-c"><span class="fma-r">SÍNTESE</span><b id="fmaSin">—</b></div>
+        </div>
+        <div class="argons" id="argons"></div>
+        <div class="quorum" id="quorum"></div>
+        <ol class="guardas" id="guardas"></ol>
+        <p class="mono" id="statusCelula" style="line-height:1.6"></p>
+        <details id="detTelegramas"><summary>Telegramas URB1 e o que cada nó disse</summary><div class="corpo" id="telegramas"></div></details>
+      </section>
+      <button type="button" class="btn" id="btCelula" hidden style="margin-bottom:9px">Convocar a célula UROBOROS</button>
+      <p class="mono" id="statusGemini" style="margin-bottom:10px;line-height:1.6"></p>
+      <div class="btn-linha tres">
+        <button type="button" class="btn fino" id="btArquivar">Arquivar</button>
+        <button type="button" class="btn fino" id="btCompartilhar">Enviar</button>
+        <button type="button" class="btn fino" id="btImprimir">PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ RADAR ============ -->
+  <div class="painel" id="p-radar" role="tabpanel">
+    <div class="camara">
+      <h2>Mapa do Maroto</h2>
+      <p class="desc">A cor da borda de cada pegada é a procedência. Toque para injetar na Penseira.</p>
+      <div id="radarWrap"><canvas id="radar"></canvas></div>
+      <div class="btn-linha">
+        <button type="button" class="btn fino" id="btOcultar">Malfeito feito</button>
+        <button type="button" class="btn fino" id="btEco">Testar eco</button>
+      </div>
+      <p class="mono" id="infoRadar" style="margin-top:10px;line-height:1.6">Radar ativo</p>
+      <ul class="lista" id="listaSinais"></ul>
+      <div class="btn-linha">
+        <button type="button" class="btn fino" id="btNovoSinal">+ Sinal sintético</button>
+        <button type="button" class="btn fino" id="btLimparSinais">Restaurar acervo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ARQUIVO ============ -->
+  <div class="painel" id="p-arquivo" role="tabpanel">
+    <div class="camara">
+      <h2>Seção Reservada</h2>
+      <p class="desc">Decretos vencidos e julgados. É aqui que o sistema descobre se acerta.</p>
+      <div class="placar">
+        <div class="ficha"><div class="n" id="nTotal">0</div><span class="r">Arquivados</span></div>
+        <div class="ficha"><div class="n" id="nResolv">0</div><span class="r">Resolvidos</span></div>
+        <div class="ficha"><div class="n" id="nBrier">—</div><span class="r">Brier</span></div>
+      </div>
+      <div class="faixa ensaio" id="faixaBrier">Brier mede calibração: 0 é perfeito, 0,25 é chute de moeda, 1 é o pior possível. Precisa de pelo menos um decreto resolvido.</div>
+      <div id="listaArquivo"></div>
+      <table class="calib" id="tabCalib" hidden>
+        <thead><tr><th>Faixa</th><th>n</th><th>Previsto</th><th>Observado</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="btn-linha">
+        <button type="button" class="btn fino" id="btExportar">Exportar JSON</button>
+        <button type="button" class="btn fino" id="btImportar">Importar JSON</button>
+      </div>
+      <input type="file" id="arqImport" accept="application/json,.json" hidden>
+      <p class="mono" id="avisoArmazen" style="margin-top:10px;line-height:1.6"></p>
+    </div>
+  </div>
+
+  <!-- ============ REGUA ============ -->
+  <div class="painel" id="p-regua" role="tabpanel">
+    <div class="camara">
+      <h2>Régua IMO</h2>
+      <p class="desc">Verificador determinístico. Nenhum modelo envolvido — só aritmética e combinatória, rodando neste aparelho.</p>
+      <div class="faixa ok" id="faixaRegua">Executando…</div>
+
+      <details>
+        <summary>O que é INVARIANTE e o que é interpretação</summary>
+        <div class="corpo">
+          <p><b>INVARIANTE</b> é teorema provado, com a fonte nomeada no código. Três deles valem sobre a dinâmica do próprio sistema: <b>SL 2012 C6</b> (quantas hipóteses reter por fonte que mente ≤ k vezes seguidas), <b>SL 2024 C7</b> (o radar reinjeta a própria saída — isso é literalmente uma sequência auto-contadora, e quando ela entra em período parou de trazer informação) e <b>SL A7 / Irã</b> (score montado por máximo satura em regime linear; aceleração depois disso é artefato da construção).</p>
+          <p style="margin-top:8px">Os outros três — <b>SL 2025 C8</b>, <b>SL 2007 C6</b>, <b>SL 2020 G9</b> — só valem sob pré-condição, e a pré-condição está escrita no retorno de cada um, não escondida.</p>
+          <p style="margin-top:8px"><b>INTERPRETAÇÃO</b> é leitura minha sobre o sistema e não decorre do teorema. Está marcada como tal.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Sondas cegas — resposta fechada</summary>
+        <div class="corpo" id="corpoSondas"></div>
+      </details>
+
+      <div class="grade" id="gradeRegua"></div>
+      <div class="btn-linha">
+        <button type="button" class="btn fino" id="btRegua">Reexecutar</button>
+        <button type="button" class="btn fino" id="btRelatorio">Ver JSON</button>
+      </div>
+      <button type="button" class="btn" id="btCalibrar" hidden style="margin-top:9px">Calibrar a célula com as 7 sondas cegas</button>
+      <p class="mono" id="statusCalib" style="margin-top:9px;line-height:1.6"></p>
+      <table class="calib" id="tabCalibCel" hidden>
+        <thead><tr><th>Modelo</th><th>Função</th><th>Sondas</th><th>Quando</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <pre class="json" id="jsonRegua" hidden></pre>
+    </div>
+
+    <div class="camara">
+      <h2>Banco de ensaio</h2>
+      <p class="desc">Rodar um invariante com os seus próprios números.</p>
+      <div class="campo">
+        <label for="invSel">Invariante</label>
+        <select id="invSel">
+          <option value="SL2012-C6">SL 2012 C6 — hipóteses contra fonte que mente</option>
+          <option value="SL2025-C8">SL 2025 C8 — piso de blocos na grade k²×k²</option>
+          <option value="SL2020-G9">SL 2020 G9 — margem de separação</option>
+          <option value="SL-A7-IRA">SL A7 Irã — saturação do score</option>
+        </select>
+      </div>
+      <div class="linha2">
+        <div class="campo"><label for="pA" id="rotA">k</label><input type="text" id="pA" value="4" inputmode="numeric"></div>
+        <div class="campo"><label for="pB" id="rotB">hipóteses retidas</label><input type="text" id="pB" value="16" inputmode="numeric"></div>
+      </div>
+      <button type="button" class="btn fino" id="btRodarInv">Rodar</button>
+      <pre class="json" id="jsonInv" hidden></pre>
+    </div>
+  </div>
+
+  <div class="neuro-div" aria-hidden="true"><svg viewBox="0 0 320 24" preserveAspectRatio="xMidYMid meet">
+      <g fill="none" stroke="#D4AF37" stroke-linecap="round" opacity=".7">
+        <path d="M6,12 H136" stroke-width="1"/><path d="M184,12 H314" stroke-width="1"/>
+        <path d="M150,12 C142,6 136,4 126,3" stroke-width="1.1"/><path d="M150,12 C142,18 136,20 128,21" stroke-width="1.1"/>
+        <path d="M170,12 C178,6 184,4 194,3" stroke-width="1.1"/><path d="M170,12 C178,18 184,20 192,21" stroke-width="1.1"/>
+      </g>
+      <circle cx="160" cy="12" r="6.5" fill="rgba(212,175,55,.18)" stroke="#D4AF37" stroke-width="1.2"/>
+      <circle cx="160" cy="12" r="2.4" fill="#D4AF37"/>
+      <g fill="#D4AF37" opacity=".8"><circle cx="126" cy="3" r="1.6"/><circle cx="128" cy="21" r="1.6"/><circle cx="194" cy="3" r="1.6"/><circle cx="192" cy="21" r="1.6"/><circle cx="6" cy="12" r="2"/><circle cx="314" cy="12" r="2"/></g>
+    </svg></div>
+  <p class="rodape">
+    Régua, radar e arquivo rodam neste aparelho.<br>
+    <span id="rodapeTxt">Texto dos pilares: matriz estática escrita à mão — não é modelo, e está rotulado assim em todo decreto.</span>
+  </p>
+</div>
+
+<nav class="abas" role="tablist">
+  <button class="aba" role="tab" aria-selected="true"  data-p="decreto">Decreto</button>
+  <button class="aba" role="tab" aria-selected="false" data-p="radar">Radar</button>
+  <button class="aba" role="tab" aria-selected="false" data-p="arquivo">Arquivo</button>
+  <button class="aba" role="tab" aria-selected="false" data-p="regua">Régua</button>
+</nav>
+
+<!-- pergaminho para impressao / PDF -->
+<div id="pergaminho">
+  <div class="rolo">
+    <div class="marca-agua" id="marcaAgua" aria-hidden="true"></div>
+    <div class="cab">
+      <p style="font-size:.66rem;letter-spacing:.2em;color:#6B0F24;text-transform:uppercase">Catedral TICTIC — para as dúvidas da Ana Lara</p>
+      <h2>DECRETO EXECUTIVO DE FORESIGHT</h2>
+      <p id="pId" style="font-family:monospace;font-size:.72rem;color:#5E0D20;margin-top:3mm"></p>
+    </div>
+    <section><h4>Ala &amp; horizonte</h4><p id="pAla">—</p><p id="pZeit" style="font-style:italic;margin-top:2mm"></p></section>
+    <section><h4>Sinal e sua procedência</h4><p id="pSinal">—</p></section>
+    <section><h4>Critério de resolução e confiança</h4><p id="pCrit">—</p></section>
+    <section><h4>01 · Arte &amp; prototipagem diegética</h4><p id="pArte">—</p></section>
+    <section><h4>02 · Fundação filosófica</h4><p id="pFilo">—</p></section>
+    <section><h4>03 · Alavanca psicológica</h4><p id="pPsico">—</p></section>
+    <section><h4>04 · Manifesto da Sala Precisa</h4><p id="pVendas">—</p></section>
+    <div class="rodape-rolo" id="pRodape"></div>
+    <div class="selo" id="pSelo"><span id="pSeloTxt">SELO</span></div>
+  </div>
+</div>
+
+<script>
+/* ===========================================================================
+   TICTIC — CATEDRAL DE SPECULATIVE UX & FORESIGHT
+   Arquivo unico, offline, sem dependencia nenhuma.
+
+   REGRA DA CASA: nenhuma crase neste bloco. Concatenacao em todo lugar.
+   Foi template literal corrompido que matou a versao anterior em copia e cola.
+   =========================================================================== */
+(function () {
+'use strict';
+var $ = function (id) { return document.getElementById(id); };
+
+/* =======================================================================
+   1. REGUA — invariantes do IMO Shortlist, deterministicos.
+   ======================================================================= */
+
+/* INVARIANTE · IMO SL 2012 C6 — liar's guessing game.
+   Fonte que mente no maximo k vezes SEGUIDAS: reter 2^k hipoteses garante
+   conter a verdade. Minimos exatos f(k), k=1..6, vem do Comment do problema. */
+var LIAR = { 1:2, 2:3, 3:4, 4:7, 5:11, 6:17 };
+function verificarFonte(k, retidas) {
+  var suf = Math.pow(2, k);
+  return { id:'SL2012-C6', tipo:'INVARIANTE',
+    enunciado:'Fonte que mente no maximo k vezes seguidas: reter 2^k hipoteses garante conter a verdade.',
+    k:k, hipotesesRetidas:retidas, hipotesesSuficientes:suf,
+    minimoExatoConhecido:(LIAR[k] !== undefined ? LIAR[k] : null),
+    garantido: retidas >= suf };
+}
+
+/* INVARIANTE · IMO SL 2024 C7 — sequencia auto-contadora.
+   a_n = numero de vezes que a_{n-1} aparece em a_1..a_{n-1}.
+   Ao menos uma das subsequencias (impar/par) e eventualmente periodica. */
+function autoContagem(semente, passos) {
+  var a = semente.slice(), i, j, ult, c;
+  for (i = 0; i < passos; i++) {
+    ult = a[a.length - 1]; c = 0;
+    for (j = 0; j < a.length; j++) if (a[j] === ult) c++;
+    a.push(c);
+  }
+  return a;
+}
+function periodoCauda(seq, maxP) {
+  if (seq.length < 12) return null;
+  var t = seq.slice(Math.floor(seq.length / 2));
+  var teto = Math.min(maxP || 64, Math.floor(t.length / 3)), p, i, ok;
+  for (p = 1; p <= teto; p++) {
+    ok = true;
+    for (i = p; i < t.length; i++) if (t[i] !== t[i - p]) { ok = false; break; }
+    if (ok) return p;
+  }
+  return null;
+}
+function ecoDoRadar(semente, passos) {
+  var a = autoContagem(semente, passos || 600);
+  var imp = a.filter(function (_, i) { return i % 2 === 0; });
+  var par = a.filter(function (_, i) { return i % 2 === 1; });
+  var pI = periodoCauda(imp, 64), pP = periodoCauda(par, 64);
+  return { id:'SL2024-C7', tipo:'INVARIANTE',
+    enunciado:'Sequencia auto-contadora: ao menos uma das subsequencias (impar/par) e eventualmente periodica.',
+    termos:a.length, periodoImpares:pI, periodoPares:pP,
+    teoremaSatisfeito:(pI !== null || pP !== null),
+    interpretacao:'NAO E O TEOREMA: fluxo periodico significa radar reciclando a propria saida.' };
+}
+
+/* INVARIANTE · IMO SL A7 (Ira) — a_n = max(a_k + a_{n-k}) torna-se
+   eventualmente a_n = a_{n-l} + a_l, com l realizando s = max(a_i / i). */
+function maxAditiva(base, passos) {
+  var a = base.slice(), r = base.length, n, k, m, v, L, inicio, i, q;
+  for (n = r + 1; n <= r + passos; n++) {
+    m = -Infinity;
+    for (k = 1; k <= n - 1; k++) { v = a[k - 1] + a[n - k - 1]; if (v > m) m = v; }
+    a.push(m);
+  }
+  var achado = { ell:null, aPartirDe:null };
+  for (L = 1; L <= r; L++) {
+    inicio = null;
+    for (n = a.length; n > L; n--) {
+      if (a[n - 1] === a[n - L - 1] + a[L - 1]) inicio = n; else break;
+    }
+    if (inicio !== null && (achado.aPartirDe === null || inicio < achado.aPartirDe)) {
+      achado = { ell:L, aPartirDe:inicio };
+    }
+  }
+  var s = -Infinity, arg = null;
+  for (i = 1; i <= r; i++) { q = base[i - 1] / i; if (q > s) { s = q; arg = i; } }
+  var coerente = achado.ell !== null && Math.abs(base[achado.ell - 1] / achado.ell - s) < 1e-12;
+  return { id:'SL-A7-IRA', tipo:'INVARIANTE',
+    enunciado:'a_n = max(a_k + a_{n-k}) vira a_n = a_{n-l} + a_l, com l realizando max(a_i/i).',
+    base:base, termos:a.length, ell:achado.ell, linearAPartirDe:achado.aPartirDe,
+    s:s, indiceQueRealizaS:arg, coerenteComSolucaoOficial:coerente,
+    teoremaSatisfeito:(achado.ell !== null && achado.ell <= r && coerente) };
+}
+
+/* INVARIANTE · IMO SL 2025 C8 — grade k^2 x k^2 com exatamente uma casa
+   descoberta por linha e por coluna: minimo k^2 + 2k - 3. k=45 da 2112. */
+function ladrilhos(k) { return k * k + 2 * k - 3; }
+function cobertura(k, usados) {
+  var m = ladrilhos(k);
+  return { id:'SL2025-C8', tipo:'INVARIANTE',
+    enunciado:'Grade k^2 x k^2, uma casa livre por linha e por coluna: minimo k^2 + 2k - 3 retangulos.',
+    k:k, lado:k * k, minimo:m,
+    blocosUsados:(usados == null ? null : usados),
+    viavel:(usados == null ? null : usados >= m),
+    precondicao:'so vale com lado = k^2 e exatamente uma casa descoberta por linha e por coluna' };
+}
+
+/* INVARIANTE · IMO SL 2007 C6 — maior clique PAR permite dividir em duas
+   salas com a mesma maior clique. O Comment diz que e falso sem a paridade. */
+function cliqueMax(adj, verts) {
+  var melhor = { tamanho:0, conjunto:[] };
+  function bk(R, P, X) {
+    if (!P.length && !X.length) { if (R.length > melhor.tamanho) melhor = { tamanho:R.length, conjunto:R.slice() }; return; }
+    if (R.length + P.length <= melhor.tamanho) return;
+    var pivo = P.concat(X)[0];
+    var cand = P.filter(function (v) { return !adj.get(pivo).has(v); });
+    var Pl = P.slice(), Xl = X.slice();
+    cand.forEach(function (v) {
+      bk(R.concat([v]),
+         Pl.filter(function (u) { return adj.get(v).has(u); }),
+         Xl.filter(function (u) { return adj.get(v).has(u); }));
+      Pl = Pl.filter(function (u) { return u !== v; });
+      Xl = Xl.concat([v]);
+    });
+  }
+  bk([], verts.slice(), []);
+  return melhor;
+}
+function duasSalas(verts, arestas) {
+  var adj = new Map();
+  verts.forEach(function (v) { adj.set(v, new Set()); });
+  arestas.forEach(function (e) {
+    if (adj.has(e[0]) && adj.has(e[1])) { adj.get(e[0]).add(e[1]); adj.get(e[1]).add(e[0]); }
+  });
+  var M = cliqueMax(adj, verts);
+  if (M.tamanho % 2 !== 0) {
+    return { id:'SL2007-C6', tipo:'INVARIANTE', aplicavel:false, cliqueMaxima:M.tamanho,
+      motivo:'maior clique impar — o teorema nao vale (Comment do proprio C6/2007)' };
+  }
+  var A = new Set(M.conjunto);
+  var B = new Set(verts.filter(function (v) { return !A.has(v); }));
+  var cA = function () { return cliqueMax(adj, Array.from(A)).tamanho; };
+  var cB = function () { return cliqueMax(adj, Array.from(B)).tamanho; };
+  var g = 0, v;
+  while (cA() > cB() && A.size > 0 && g++ < 400) { v = Array.from(A)[0]; A.delete(v); B.add(v); }
+  if (cA() !== cB()) {
+    var k = cA(), Bc = cliqueMax(adj, Array.from(B)), feito = false;
+    if (Bc.tamanho === k + 1) {
+      Array.from(B).some(function (x) {
+        if (M.conjunto.indexOf(x) >= 0 && Bc.conjunto.indexOf(x) < 0) { B.delete(x); A.add(x); feito = true; return true; }
+        return false;
+      });
+    }
+    if (!feito) {
+      g = 0;
+      while (cB() === k + 1 && g++ < 400) {
+        var C = cliqueMax(adj, Array.from(B));
+        var mv = C.conjunto.find(function (u) { return M.conjunto.indexOf(u) < 0; });
+        if (mv === undefined) break;
+        B.delete(mv); A.add(mv);
+      }
+    }
+  }
+  return { id:'SL2007-C6', tipo:'INVARIANTE', aplicavel:true,
+    enunciado:'Maior clique par: existe divisao em duas salas com a mesma maior clique.',
+    cliqueMaxima:M.tamanho, salaA:Array.from(A), salaB:Array.from(B),
+    cA:cA(), cB:cB(), equilibrado:(cA() === cB()) };
+}
+
+/* INVARIANTE · IMO SL 2020 G9 — n pontos a distancia >= 1 dois a dois:
+   existe reta separadora a >= (1/8) n^(-1/3) de todo ponto. Expoente otimo. */
+function margem(n) {
+  return { id:'SL2020-G9', tipo:'INVARIANTE',
+    enunciado:'n pontos a distancia >= 1: existe reta separadora a >= (1/8)n^(-1/3) de todo ponto.',
+    n:n, margemGarantida:0.125 * Math.pow(n, -1 / 3),
+    precondicao:'exige pontos a distancia >= 1 dois a dois',
+    nota:'expoente -1/3 e otimo (Comment 1 do G9/2020)' };
+}
+
+/* SONDAS CEGAS — resposta fechada, para medir um modelo antes de aceitar a
+   saida dele. Nao sao invariantes do sistema. */
+var SONDAS = [
+  { id:'A7-NL',      fonte:'IMO SL A7 (Paises Baixos)', gabarito:'3n',
+    pergunta:'Menor numero de planos que cobrem S = {0..n}^3 com x+y+z>0 sem passar pela origem.', chave:/\b3\s*\*?\s*n\b/i },
+  { id:'N5-USA',     fonte:'IMO SL N5 (EUA)', gabarito:'f(n) = n + c',
+    pergunta:'Todas as f: N -> N com (f(m)+n)(m+f(n)) quadrado perfeito.', chave:/f\s*\(\s*n\s*\)\s*=\s*n\s*\+\s*c/i },
+  { id:'A7-JP-2024', fonte:'IMO SL 2024 A7 (Japao)', gabarito:'2',
+    pergunta:'Maximo de elementos de {f(x)+f(-x)} sob a condicao funcional dada.', chave:/(^|[^\d])2([^\d]|$)/ },
+  { id:'C8-SG-2025', fonte:'IMO SL 2025 C8 (Singapura)', gabarito:'2112',
+    pergunta:'Minimo de ladrilhos numa grade 2025x2025 com uma casa livre por linha e coluna.', chave:/\b2112\b/ },
+  { id:'C6-2012',    fonte:'IMO SL 2012 C6', gabarito:'2, 3, 4, 7, 11, 17',
+    pergunta:'Valores exatos de f(k) no liar s guessing game, k = 1..6.', chave:/2\D+3\D+4\D+7\D+11\D+17/ },
+  { id:'N7-2016',    fonte:'IMO SL 2016 N7 (Hong Kong)', gabarito:'2S e divisivel por n',
+    pergunta:'Poligono ciclico inteiro, n impar, lados ao quadrado divisiveis por n: o que vale para 2S.', chave:/2\s*S[\s\S]{0,60}(divis|multipl)/i },
+  { id:'G10-SRB',    fonte:'IMO SL G10 (Servia)', gabarito:'2',
+    pergunta:'A soma das areas atribuidas aos lados e no minimo quantas vezes a area do poligono.', chave:/\b(2|dois|duas)\b/i }
+];
+function corrigirSonda(id, resposta) {
+  var s = SONDAS.filter(function (x) { return x.id === id; })[0];
+  if (!s) return { id:id, existe:false };
+  return { id:id, existe:true, gabarito:s.gabarito, acertou:s.chave.test(String(resposta == null ? '' : resposta)) };
+}
+
+function autoteste() {
+  var r = [], ok = function (nome, cond, det) { r.push({ nome:nome, ok:!!cond, detalhe:det }); };
+
+  var f1 = verificarFonte(4, 16);
+  ok('SL2012-C6 · 2^4 = 16 garante', f1.garantido && f1.hipotesesSuficientes === 16, f1.hipotesesSuficientes);
+  ok('SL2012-C6 · minimo exato f(4) = 7', f1.minimoExatoConhecido === 7, f1.minimoExatoConhecido);
+  ok('SL2012-C6 · 15 hipoteses nao garantem', verificarFonte(4, 15).garantido === false, null);
+  ok('SL2012-C6 · f(k) nunca passa de 2^k', [1,2,3,4,5,6].every(function (k) { return LIAR[k] <= Math.pow(2, k); }), null);
+
+  [[5,2,9,2],[3,3,3,1,2,7],[4,1,1,2,2,8,3]].forEach(function (sem, i) {
+    var f2 = ecoDoRadar(sem, 700);
+    ok('SL2024-C7 · periodicidade eventual, semente ' + (i + 1), f2.teoremaSatisfeito,
+       'impar=' + f2.periodoImpares + ' par=' + f2.periodoPares);
+  });
+
+  [[1,3,4],[2,2,2,9],[5,1,1],[7,3,11,2,6]].forEach(function (base, i) {
+    var f3 = maxAditiva(base, 240);
+    ok('SL-A7-IRA · regime linear e l realiza max(a_i/i), base ' + (i + 1), f3.teoremaSatisfeito,
+       'l=' + f3.ell + ' de n=' + f3.linearAPartirDe + ' s=' + f3.s.toFixed(4));
+  });
+
+  ok('SL2025-C8 · k=45 da 2112', ladrilhos(45) === 2112, ladrilhos(45));
+  ok('SL2025-C8 · k=2 da 5', ladrilhos(2) === 5, ladrilhos(2));
+  ok('SL2025-C8 · k=4 da 21', ladrilhos(4) === 21, ladrilhos(4));
+
+  var V = ['a','b','c','d','e','f'];
+  var E = [['a','b'],['a','c'],['a','d'],['b','c'],['b','d'],['c','d'],['d','e'],['e','f']];
+  var f5 = duasSalas(V, E);
+  ok('SL2007-C6 · maior clique = 4, par', f5.cliqueMaxima === 4, f5.cliqueMaxima);
+  ok('SL2007-C6 · divisao equilibrada', f5.aplicavel && f5.equilibrado, 'cA=' + f5.cA + ' cB=' + f5.cB);
+  ok('SL2007-C6 · recusa clique impar', duasSalas(['x','y','z'], [['x','y'],['y','z'],['x','z']]).aplicavel === false, null);
+
+  var f6 = margem(1000);
+  ok('SL2020-G9 · margem(1000) = 0,0125', Math.abs(f6.margemGarantida - 0.0125) < 1e-12, f6.margemGarantida);
+  ok('SL2020-G9 · margem decresce com n', margem(8000).margemGarantida < f6.margemGarantida, null);
+
+  ok('sonda C8 aceita 2112', corrigirSonda('C8-SG-2025', 'o minimo e 2112').acertou, null);
+  ok('sonda C8 recusa 2025', corrigirSonda('C8-SG-2025', 'o minimo e 2025').acertou === false, null);
+  ok('sonda A7-NL aceita 3n', corrigirSonda('A7-NL', 'sao 3n planos').acertou, null);
+  ok('sonda A7-NL recusa 2n', corrigirSonda('A7-NL', 'sao 2n planos').acertou === false, null);
+  ok('sonda N5 aceita f(n)=n+c', corrigirSonda('N5-USA', 'f(n) = n + c').acertou, null);
+  ok('banco tem 7 sondas', SONDAS.length === 7, SONDAS.length);
+  ok('toda sonda tem gabarito e fonte', SONDAS.every(function (s) { return !!s.gabarito && !!s.fonte; }), null);
+
+  var falhas = r.filter(function (x) { return !x.ok; });
+  return { total:r.length, passaram:r.length - falhas.length, falhas:falhas.length, resultados:r };
+}
+
+/* =======================================================================
+   2. MATRIZES ESTATICAS
+   Dicionario escrito a mao. Nao e inferencia, nao e previsao, nao e IA.
+   ======================================================================= */
+var M = {
+  horizontes: {
+    '2030': { ala:'Ala Leste — Torre de Astronomia (2030)', ceu:'Alinhamento de Marte',
+      zeit:'Colapso da atencao superficial; organizacoes procuram santuarios cognitivos blindados.' },
+    '2035': { ala:'Subterraneos — Camara da Penseira (2035)', ceu:'Eclipse Rubi',
+      zeit:'Memorias e decisoes executivas externalizadas em bacias de dados e interfaces neuro-simbolicas.' },
+    '2045': { ala:'Setimo Andar — A Sala Precisa (2045)', ceu:'Nebulosa Escarlate',
+      zeit:'Infraestrutura autonoma invisivel que se manifesta antes de a necessidade ser verbalizada.' }
+  },
+  filosofia: {
+    restricted_section:{ nome:'Secao Reservada e Protocolo Shisui', ax:'O conhecimento mais perigoso exige guardioes que operem nas sombras sem buscar gloria pessoal.', dir:'Restringir tecnologias predatorias e proteger a soberania humana antes do lucro imediato.' },
+    heidegger_castle:{ nome:'Habitacao Gotica (Heidegger)', ax:'Como as paredes de Hogwarts tem memoria, a arquitetura digital molda o Ser de quem a habita.', dir:'Construir ambientes que elevem dignidade e foco profundo, nao prisoes algoritmicas.' },
+    alchemy_flamel:{ nome:'Transmutacao Alquimica (Flamel e Nietzsche)', ax:'Converter o chumbo da incerteza sistemica no ouro da visao de longo prazo.', dir:'Destruir metricas efemeras para forjar valor perene.' },
+    moving_stairs:{ nome:'Escadarias Mutaveis (Heraclito)', ax:'Nenhuma rota estrategica e fixa; congelar o caminho e cair no abismo da obsolescencia.', dir:'Projetar sistemas antifrageis que mudam de configuracao quando o panorama muda.' }
+  },
+  psicologia: {
+    mirror_erised:{ nome:'O Espelho de Ojesed', mec:'O Espelho nao mostra o futuro, e sim o desejo mais desesperado. No C-Level, revela a sede por legado institucional.' },
+    pensieve_extraction:{ nome:'A Penseira de Pedra', mec:'Extrair os fios de ansiedade decisoria e projeta-los num artefato tangivel onde os padroes ocultos ficam visiveis.' },
+    marauder_radar:{ nome:'O Mapa do Maroto', mec:'Ver cada passo das forcas invisiveis; o cliente compra a vantagem assimetrica de enxergar atraves das paredes.' },
+    room_requirement:{ nome:'Arquetipo da Sala Precisa', mec:'Antecipar o vazio psicologico do decisor e apresentar o produto como refugio sob medida no instante da crise.' }
+  },
+  setores: {
+    pensieve_ux:{ tit:'Bacias de memoria diegetica', art:'Console circular em obsidiana com runas de latao e fluido ferromagnetico rubi que materializa cenarios tridimensionais.', val:'Reducao de pontos cegos estrategicos em fusoes e conselhos. NUMERO NAO MEDIDO.' },
+    marauder_telemetry:{ tit:'Cartografia preditiva em pergaminho vivo', art:'Superficie de e-ink tatil em tom pergaminho e tinta vinho que revela fluxos de capital e riscos ocultos.', val:'Contratos de inteligencia soberana com retencao plurianual. MARGEM NAO MEDIDA.' },
+    sanctuary_vault:{ tit:'Camaras de isolamento cognitivo', art:'Arquitetura fisico-digital com vitrais eletrocromicos carmesins que bloqueiam vigilancia e adaptam a acustica.', val:'Posicionamento de ultra-luxo. PRECO NAO MEDIDO.' }
+  }
+};
+
+/* =======================================================================
+   3. SINAIS COM PROCEDENCIA
+   Impressao FNV-1a. NAO e hash criptografico — crypto.subtle nao existe em
+   file:// e eu nao vou chamar de SHA-256 o que nao e.
+   ======================================================================= */
+function impressao(txt) {
+  var h = 0x811c9dc5, i;
+  for (i = 0; i < txt.length; i++) {
+    h ^= txt.charCodeAt(i);
+    h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+  }
+  return ('00000000' + h.toString(16)).slice(-8);
+}
+function criarSinal(d) {
+  var s = { id:d.id, nome:d.nome, categoria:d.categoria || 'Nao classificado',
+    corredor:d.corredor || 'Corredor nao declarado', acao:d.acao,
+    origem:d.origem, fonte:d.fonte || null, registradoEm:new Date().toISOString() };
+  s.impressao = impressao([s.nome, s.corredor, s.acao, s.origem, s.fonte || ''].join('|'));
+  return s;
+}
+var SEMENTE_SINAIS = [
+  { id:'SIG-01', nome:'Exodo de telas luminosas', categoria:'Arte / UX', corredor:'Torre de Astronomia', acao:'Prototipar hardware diegetico silencioso', origem:'SINTETICO' },
+  { id:'SIG-02', nome:'Fadiga algoritmica executiva', categoria:'Psicologia', corredor:'Camara da Penseira', acao:'Aplicar descompressao cognitiva de sombra', origem:'SINTETICO' },
+  { id:'SIG-03', nome:'Crise de soberania de dados', categoria:'Filosofia', corredor:'Secao Reservada', acao:'Ativar blindagem zero-data', origem:'SINTETICO' },
+  { id:'SIG-04', nome:'Migracao de capital UHNW', categoria:'Vendas', corredor:'Sala Precisa', acao:'Apresentar contrato plurianual de refugio cognitivo', origem:'SINTETICO' },
+  { id:'SIG-05', nome:'Colapso de marcas sinteticas', categoria:'Arte / Filosofia', corredor:'Grande Salao', acao:'Posicionar estetica artesanal gotica-imperial', origem:'SINTETICO' }
+];
+var sinais = SEMENTE_SINAIS.map(criarSinal);
+
+/* =======================================================================
+   4. ARMAZENAMENTO LOCAL
+   localStorage pode nao persistir em file://. Por isso o botao Exportar e
+   o unico caminho de persistencia em que eu confio, e isso esta escrito
+   na tela, nao escondido.
+   ======================================================================= */
+var CHAVE = 'tictic.catedral.v2';
+var arquivo = [];
+var armazenOK = false;
+(function () {
+  try {
+    localStorage.setItem(CHAVE + '.teste', '1');
+    localStorage.removeItem(CHAVE + '.teste');
+    armazenOK = true;
+    var bruto = localStorage.getItem(CHAVE);
+    if (bruto) { var j = JSON.parse(bruto); if (Array.isArray(j)) arquivo = j; }
+  } catch (e) { armazenOK = false; }
+})();
+function salvarArquivo() {
+  if (!armazenOK) return false;
+  try { localStorage.setItem(CHAVE, JSON.stringify(arquivo)); return true; }
+  catch (e) { armazenOK = false; return false; }
+}
+
+/* =======================================================================
+   5. ESTADO
+   ======================================================================= */
+var REGUA = autoteste();
+var MODO = REGUA.falhas === 0 ? 'NORMAL' : 'DEGRADADO';
+var decretoAtual = null;
+
+function selar(d) {
+  var p = [];
+  if (!d.falseavel) p.push('SEM CRITERIO DE RESOLUCAO');
+  if (d.sinalOrigem === 'SINTETICO' || !d.sinalOrigem) p.push('SINAL SEM PROCEDENCIA');
+  if (!d.fonteTexto || d.fonteTexto === 'MATRIZ_ESTATICA') p.push('TEXTO DE MATRIZ ESTATICA');
+  if (d.fonteTexto && d.fonteTexto.indexOf('GEMINI') === 0 && !d.calibrado) p.push('MODELO NAO CALIBRADO');
+  if (d.fonteTexto && d.fonteTexto.indexOf('CELULA') === 0) {
+    if (!d.calibrado) p.push('RELATOR NAO CALIBRADO');
+    if (d.celula && d.celula.lei && d.celula.lei !== 'NORMAL') p.push('CELULA EM LEI ' + d.celula.lei);
+    if (d.celula && d.celula.semLastro > 0) p.push('SEM LASTRO: ' + d.celula.semLastro);
+  }
+  if (MODO === 'DEGRADADO') p.push('REGUA REPROVADA NO BOOT');
+  return { oficial:p.length === 0, rotulo:(p.length === 0 ? 'SELO OFICIAL' : 'SELO DE ENSAIO'), restricoes:p };
+}
+
+function sintetizar(entrada) {
+  var h = M.horizontes[entrada.horizonte] || M.horizontes['2035'];
+  var f = M.filosofia[entrada.filosofia] || M.filosofia.restricted_section;
+  var p = M.psicologia[entrada.psicologia] || M.psicologia.mirror_erised;
+  var s = M.setores[entrada.setor] || M.setores.pensieve_ux;
+  var crit = (entrada.criterio || '').trim();
+  var falseavel = !!(crit && entrada.dataRes);
+  var d = {
+    id:'TICTIC-' + Date.now().toString(36).toUpperCase(),
+    emitidoEm:new Date().toISOString(),
+    horizonte:entrada.horizonte, ala:h.ala, ceu:h.ceu, zeit:h.zeit,
+    sinal:(entrada.sinal || '').trim() || 'Nenhum sinal informado.',
+    sinalOrigem:entrada.origem || 'SINTETICO',
+    sinalFonte:entrada.fonte || null,
+    sinalImpressao:impressao((entrada.sinal || '') + '|' + (entrada.origem || '')),
+    dataRes:entrada.dataRes || null,
+    criterio:crit || null,
+    confianca:entrada.confianca,
+    falseavel:falseavel,
+    pilares:{
+      arte:s.art,
+      filosofia:f.ax + ' Diretriz: ' + f.dir,
+      psicologia:p.nome + ' — ' + p.mec,
+      vendas:s.val
+    },
+    fonteTexto:'MATRIZ_ESTATICA',
+    reguaResumo:REGUA.passaram + '/' + REGUA.total,
+    resolucao:null, resolvidoEm:null
+  };
+  d.pilaresMatriz = { arte:d.pilares.arte, filosofia:d.pilares.filosofia, psicologia:d.pilares.psicologia, vendas:d.pilares.vendas };
+  d.grimorio = { filosofia:f.nome || '', setor:s.tit || '', psicologia:p.nome || '' };
+  d.selo = selar(d);
+  return d;
+}
+
+/* =======================================================================
+   6. RENDERIZACAO
+   ======================================================================= */
+function textoDecreto(d) {
+  return 'DECRETO ' + d.id + '\n' + d.ala + '\n\n' +
+    'Sinal: ' + d.sinal + ' [' + d.sinalOrigem + ']\n' +
+    (d.falseavel ? ('Resolve em ' + d.dataRes + ' com ' + d.confianca + '% de confianca: ' + d.criterio)
+                 : 'NAO FALSEAVEL — sem data e criterio.') + '\n\n' +
+    'I. ' + d.pilares.arte + '\n\nII. ' + d.pilares.filosofia + '\n\nIII. ' + d.pilares.psicologia +
+    '\n\nIV. ' + d.pilares.vendas + '\n\n' + d.selo.rotulo +
+    (d.selo.restricoes.length ? ' — ' + d.selo.restricoes.join(' | ') : '');
+}
+
+function mostrarDecreto(d) {
+  decretoAtual = d;
+  $('idDecreto').textContent = d.id;
+  $('oAla').textContent = d.ala + ' · ' + d.ceu;
+  $('oZeit').textContent = d.zeit;
+  $('oSinal').textContent = d.sinal + '  [' + d.sinalOrigem + (d.sinalFonte ? ' · ' + d.sinalFonte : '') + ']';
+  $('oCrit').textContent = d.falseavel
+    ? ('Resolve em ' + d.dataRes + ' · confiança declarada ' + d.confianca + '%: ' + d.criterio)
+    : 'NÃO FALSEÁVEL — sem data e critério este decreto não pode errar, logo não pode acertar.';
+  $('oArte').textContent = d.pilares.arte;
+  $('oFilo').textContent = d.pilares.filosofia;
+  $('oPsico').textContent = d.pilares.psicologia;
+  $('oVendas').textContent = d.pilares.vendas;
+
+  var fx = $('faixaSelo');
+  fx.className = 'faixa ' + (d.selo.oficial ? 'ok' : 'ensaio');
+  fx.textContent = d.selo.rotulo + (d.selo.restricoes.length ? ' — ' + d.selo.restricoes.join(' | ') : '');
+
+  $('pId').textContent = d.id + '  ·  ' + new Date(d.emitidoEm).toLocaleString('pt-BR');
+  $('pAla').textContent = d.ala + ' · ' + d.ceu;
+  $('pZeit').textContent = d.zeit;
+  $('pSinal').textContent = d.sinal + '  [origem: ' + d.sinalOrigem +
+    (d.sinalFonte ? ' · fonte: ' + d.sinalFonte : ' · sem fonte') + ' · impressao ' + d.sinalImpressao + ']';
+  $('pCrit').textContent = d.falseavel
+    ? ('Em ' + d.dataRes + ', este decreto sera verdadeiro se: ' + d.criterio + '  (confianca declarada: ' + d.confianca + '%)')
+    : 'NENHUM. Decreto nao falseavel.';
+  $('pArte').textContent = d.pilares.arte;
+  $('pFilo').textContent = d.pilares.filosofia;
+  $('pPsico').textContent = d.pilares.psicologia;
+  $('pVendas').textContent = d.pilares.vendas;
+  $('pRodape').textContent = 'Texto: ' + d.fonteTexto + '. Regua no boot: ' + d.reguaResumo + '. ' +
+    (d.celula ? 'Celula UROBOROS: lei ' + d.celula.lei + ', relator ' + (d.celula.relator || '-') + ', ' + d.celula.semLastro + ' sem lastro, isolados ' + (d.celula.isolados.join(',') || 'nenhum') + ', custo medido US$ ' + (d.celula.custo != null ? d.celula.custo.toFixed(4) : 'NAO MEDIDO') + '. ' : '') +
+    (d.selo.restricoes.length ? 'Restricoes: ' + d.selo.restricoes.join('; ') + '.' : 'Sem restricoes.');
+  var selo = $('pSelo');
+  selo.className = 'selo' + (d.selo.oficial ? '' : ' ens');
+  $('pSeloTxt').innerHTML = d.selo.oficial ? 'SELO<br>OFICIAL<br>TICTIC' : 'ENSAIO<br>SEM<br>PROCEDENCIA';
+}
+
+function lerFormulario() {
+  return {
+    horizonte:$('horizonte').value, setor:$('setor').value,
+    filosofia:$('filosofia').value, psicologia:$('psicologia').value,
+    sinal:$('sinal').value, origem:$('origem').value,
+    fonte:($('fonte').value || '').trim() || null,
+    dataRes:$('dataRes').value || null,
+    criterio:$('criterio').value,
+    confianca:parseInt($('conf').value, 10)
+  };
+}
+function conjurar(ev) { if (ev) ev.preventDefault(); mostrarDecreto(sintetizar(lerFormulario())); }
+
+/* ---- radar ---- */
+var cv = $('radar'), ctx = cv.getContext('2d'), revelado = true, agentes = [], tick = 0, rodando = true;
+var ALAS = [
+  { n:'GRANDE SALAO', x:.26, y:.24 }, { n:'SECAO RESERVADA', x:.74, y:.24 },
+  { n:'PENSEIRA', x:.26, y:.76 }, { n:'SALA PRECISA', x:.74, y:.76 }
+];
+function dimensionar() {
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var l = cv.parentElement.clientWidth || 340;
+  cv.width = Math.round(l * dpr); cv.height = Math.round(230 * dpr);
+  cv.style.height = '230px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+function posicionar(s, i) {
+  var L = cv.parentElement.clientWidth || 340;
+  return { d:s, x:40 + ((i * 73) % Math.max(60, L - 80)), y:40 + ((i * 47) % 150),
+    vx:(((i % 5) - 2) || 1) * .16, vy:(((i % 3) - 1) || 1) * .19, r:[] };
+}
+function recarregarAgentes() { agentes = sinais.map(posicionar); }
+function corOrigem(o) {
+  return o === 'COLETADO' ? 'rgba(95,174,124,.95)' : o === 'INFERIDO' ? 'rgba(217,164,65,.95)' : 'rgba(154,130,144,.9)';
+}
+function desenhar() {
+  if (!rodando) { requestAnimationFrame(desenhar); return; }
+  var L = cv.clientWidth || 340, A = 230;
+  ctx.clearRect(0, 0, L, A);
+  if (!revelado) {
+    ctx.fillStyle = 'rgba(212,175,55,.75)'; ctx.font = '600 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('MALFEITO FEITO — PERGAMINHO SELADO', L / 2, A / 2);
+    requestAnimationFrame(desenhar); return;
+  }
+  ctx.strokeStyle = 'rgba(212,175,55,.18)'; ctx.lineWidth = 1;
+  ctx.strokeRect(14, 14, L - 28, A - 28);
+  ctx.beginPath();
+  ctx.moveTo(L / 2, 14); ctx.lineTo(L / 2, A - 14);
+  ctx.moveTo(14, A / 2); ctx.lineTo(L - 14, A / 2);
+  ctx.stroke();
+  ctx.beginPath(); ctx.arc(L / 2, A / 2, 26, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(212,175,55,.4)'; ctx.stroke();
+
+  ctx.font = '600 8px ui-monospace, monospace';
+  ctx.fillStyle = 'rgba(234,223,194,.5)'; ctx.textAlign = 'center';
+  ALAS.forEach(function (w) { ctx.fillText(w.n, w.x * L, w.y * A); });
+
+  tick++;
+  agentes.forEach(function (ag) {
+    ag.x += ag.vx; ag.y += ag.vy;
+    if (ag.x < 30 || ag.x > L - 30) ag.vx *= -1;
+    if (ag.y < 30 || ag.y > A - 30) ag.vy *= -1;
+    if (tick % 20 === 0) { ag.r.push({ x:ag.x, y:ag.y, a:Math.atan2(ag.vy, ag.vx), o:1 }); if (ag.r.length > 6) ag.r.shift(); }
+    ag.r.forEach(function (fp, i) {
+      fp.o *= .991;
+      ctx.save(); ctx.translate(fp.x, fp.y); ctx.rotate(fp.a);
+      ctx.fillStyle = 'rgba(212,175,55,' + (fp.o * .7) + ')';
+      ctx.beginPath(); ctx.ellipse(0, (i % 2 ? 3.5 : -3.5), 2.6, 1.4, 0, 0, Math.PI * 2);
+      ctx.fill(); ctx.restore();
+    });
+    ctx.font = '500 9px ui-monospace, monospace';
+    var nome = ag.d.nome.length > 22 ? ag.d.nome.slice(0, 21) + '…' : ag.d.nome;
+    var larg = ctx.measureText(nome).width + 12;
+    ctx.fillStyle = 'rgba(20,3,8,.88)';
+    ctx.strokeStyle = corOrigem(ag.d.origem);
+    ctx.fillRect(ag.x - larg / 2, ag.y - 20, larg, 15);
+    ctx.strokeRect(ag.x - larg / 2, ag.y - 20, larg, 15);
+    ctx.fillStyle = '#F7EFE4'; ctx.textAlign = 'center';
+    ctx.fillText(nome, ag.x, ag.y - 9);
+  });
+  requestAnimationFrame(desenhar);
+}
+function listarSinais() {
+  var ul = $('listaSinais'); ul.innerHTML = '';
+  sinais.forEach(function (s) {
+    var li = document.createElement('li'); li.className = 'sinal'; li.setAttribute('role', 'button'); li.tabIndex = 0;
+    var b = document.createElement('b'); b.textContent = '[' + s.id + '] ' + s.nome; li.appendChild(b);
+    var a = document.createElement('span'); a.className = 'ac'; a.textContent = s.corredor + ' — ' + s.acao; li.appendChild(a);
+    var e = document.createElement('span'); e.className = 'etiq o-' + s.origem;
+    e.textContent = s.origem + ' · ' + (s.fonte || 'SEM FONTE') + ' · ' + s.impressao; li.appendChild(e);
+    li.addEventListener('click', function () {
+      $('sinal').value = s.nome + ': ' + s.acao;
+      $('origem').value = s.origem; $('fonte').value = s.fonte || '';
+      $('campoFonte').hidden = (s.origem !== 'COLETADO');
+      $('infoRadar').textContent = 'INJETADO: ' + s.id + ' (' + s.origem + ')';
+      conjurar(); irPara('decreto');
+    });
+    ul.appendChild(li);
+  });
+}
+
+/* ---- arquivo e Brier ---- */
+function brier() {
+  var res = arquivo.filter(function (d) { return d.resolucao; });
+  if (!res.length) return null;
+  var soma = 0;
+  res.forEach(function (d) {
+    var p = (d.confianca || 50) / 100, o = (d.resolucao === 'VERDADEIRO') ? 1 : 0;
+    soma += (p - o) * (p - o);
+  });
+  return { n:res.length, bs:soma / res.length };
+}
+function calibracao() {
+  var faixas = [[0,20],[20,40],[40,60],[60,80],[80,100]], saida = [];
+  faixas.forEach(function (f) {
+    var g = arquivo.filter(function (d) {
+      return d.resolucao && d.confianca > f[0] && d.confianca <= f[1];
+    });
+    if (!g.length) return;
+    var prev = g.reduce(function (s, d) { return s + d.confianca; }, 0) / g.length;
+    var obs = 100 * g.filter(function (d) { return d.resolucao === 'VERDADEIRO'; }).length / g.length;
+    saida.push({ faixa:f[0] + '–' + f[1] + '%', n:g.length, prev:prev.toFixed(0) + '%', obs:obs.toFixed(0) + '%' });
+  });
+  return saida;
+}
+function listarArquivo() {
+  var cx = $('listaArquivo'); cx.innerHTML = '';
+  $('nTotal').textContent = arquivo.length;
+  var b = brier();
+  $('nResolv').textContent = b ? b.n : 0;
+  $('nBrier').textContent = b ? b.bs.toFixed(3).replace('.', ',') : '—';
+  var fb = $('faixaBrier');
+  if (b) {
+    fb.className = 'faixa ' + (b.bs < 0.25 ? 'ok' : 'ensaio');
+    fb.textContent = 'Brier ' + b.bs.toFixed(3).replace('.', ',') + ' sobre ' + b.n +
+      ' decreto(s). Abaixo de 0,25 o sistema bate o chute de moeda; acima, perde para ela.';
+  } else {
+    fb.className = 'faixa ensaio';
+    fb.textContent = 'Nenhum decreto resolvido ainda. Brier so existe depois que algum vencer e for julgado.';
+  }
+
+  if (!arquivo.length) {
+    var v = document.createElement('p'); v.className = 'mono';
+    v.textContent = 'Arquivo vazio. Conjure um decreto e toque em Arquivar.';
+    cx.appendChild(v);
+  }
+  arquivo.slice().reverse().forEach(function (d) {
+    var el = document.createElement('div');
+    el.className = 'arq' + (d.resolucao === 'VERDADEIRO' ? ' v' : d.resolucao === 'FALSO' ? ' f' : '');
+    var cab = document.createElement('div'); cab.className = 'cab';
+    var i1 = document.createElement('span'); i1.className = 'idc'; i1.textContent = d.id;
+    var i2 = document.createElement('span'); i2.className = 'idc';
+    i2.textContent = d.resolucao ? d.resolucao : (d.dataRes ? 'vence ' + d.dataRes : 'sem prazo');
+    cab.appendChild(i1); cab.appendChild(i2); el.appendChild(cab);
+    var c = document.createElement('p'); c.className = 'crit';
+    c.textContent = d.criterio || '(sem critério — decreto não falseável)'; el.appendChild(c);
+    var m2 = document.createElement('div'); m2.className = 'met';
+    m2.textContent = 'confiança ' + (d.confianca || '—') + '% · sinal ' + d.sinalOrigem + ' · ' + d.selo.rotulo;
+    el.appendChild(m2);
+    var j = document.createElement('div'); j.className = 'jul';
+    [['sim','VERDADEIRO','Deu certo'], ['nao','FALSO','Deu errado'], ['', null, 'Apagar']].forEach(function (op) {
+      var bt = document.createElement('button'); bt.className = op[0]; bt.textContent = op[2];
+      bt.addEventListener('click', function () {
+        if (op[2] === 'Apagar') {
+          arquivo = arquivo.filter(function (x) { return x.id !== d.id; });
+        } else {
+          d.resolucao = (d.resolucao === op[1]) ? null : op[1];
+          d.resolvidoEm = d.resolucao ? new Date().toISOString() : null;
+        }
+        salvarArquivo(); listarArquivo();
+      });
+      j.appendChild(bt);
+    });
+    el.appendChild(j); cx.appendChild(el);
+  });
+
+  var tb = $('tabCalib'), tbody = tb.querySelector('tbody'); tbody.innerHTML = '';
+  var cal = calibracao();
+  tb.hidden = !cal.length;
+  cal.forEach(function (r) {
+    var tr = document.createElement('tr');
+    [r.faixa, r.n, r.prev, r.obs].forEach(function (v) {
+      var td = document.createElement('td'); td.textContent = v; tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+
+  $('avisoArmazen').textContent = armazenOK
+    ? 'Guardado neste navegador. Limpar dados do site apaga tudo — exporte antes.'
+    : 'ATENÇÃO: este navegador não deixou gravar (comum ao abrir o arquivo direto do armazenamento). O arquivo só vive enquanto a aba estiver aberta. Use Exportar JSON.';
+}
+
+/* ---- regua na tela ---- */
+function pintarRegua() {
+  REGUA = autoteste();
+  MODO = REGUA.falhas === 0 ? 'NORMAL' : 'DEGRADADO';
+  var g = $('gradeRegua'); g.innerHTML = '';
+  REGUA.resultados.forEach(function (x) {
+    var c = document.createElement('div'); c.className = 'chk' + (x.ok ? '' : ' mal');
+    var a = document.createElement('span'); a.className = 'c'; a.textContent = x.ok ? 'PASSOU' : 'FALHOU';
+    var b = document.createElement('span'); b.className = 't'; b.textContent = x.nome;
+    c.appendChild(a); c.appendChild(b);
+    if (x.detalhe !== null && x.detalhe !== undefined) {
+      var d = document.createElement('span'); d.className = 'd'; d.textContent = String(x.detalhe); c.appendChild(d);
+    }
+    g.appendChild(c);
+  });
+  var f = $('faixaRegua');
+  f.className = 'faixa ' + (REGUA.falhas === 0 ? 'ok' : 'ensaio');
+  f.textContent = REGUA.passaram + '/' + REGUA.total + ' checagens — modo ' + MODO +
+    (REGUA.falhas ? '. Enquanto houver falha, nenhum decreto recebe selo oficial.' : '.');
+  $('estadoWard').textContent = 'WARD ' + MODO + ' · RÉGUA ' + REGUA.passaram + '/' + REGUA.total;
+  var cs = $('corpoSondas'); cs.innerHTML = '';
+  SONDAS.forEach(function (s) {
+    var p = document.createElement('p'); p.style.marginBottom = '8px';
+    var b = document.createElement('b'); b.textContent = s.fonte + ' — gabarito: ' + s.gabarito;
+    p.appendChild(b); p.appendChild(document.createElement('br'));
+    p.appendChild(document.createTextNode(s.pergunta));
+    cs.appendChild(p);
+  });
+}
+
+/* ---- abas ---- */
+function irPara(nome) {
+  Array.prototype.forEach.call(document.querySelectorAll('.painel'), function (p) {
+    p.classList.toggle('ativo', p.id === 'p-' + nome);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.aba'), function (a) {
+    a.setAttribute('aria-selected', a.dataset.p === nome ? 'true' : 'false');
+  });
+  if (nome === 'arquivo') listarArquivo();
+  if (nome === 'radar') { dimensionar(); }
+  window.scrollTo(0, 0);
+}
+Array.prototype.forEach.call(document.querySelectorAll('.aba'), function (a) {
+  a.addEventListener('click', function () { irPara(a.dataset.p); });
+});
+
+/* =======================================================================
+   7. LIGACOES
+   ======================================================================= */
+$('formulario').addEventListener('submit', conjurar);
+$('conf').addEventListener('input', function () { $('confTxt').textContent = $('conf').value + '%'; });
+$('origem').addEventListener('change', function () {
+  $('campoFonte').hidden = ($('origem').value !== 'COLETADO');
+});
+
+$('btArquivar').addEventListener('click', function () {
+  if (!decretoAtual) return;
+  if (arquivo.some(function (x) { return x.id === decretoAtual.id; })) { irPara('arquivo'); return; }
+  arquivo.push(JSON.parse(JSON.stringify(decretoAtual)));
+  salvarArquivo(); irPara('arquivo');
+});
+
+$('btCompartilhar').addEventListener('click', function () {
+  if (!decretoAtual) return;
+  var txt = textoDecreto(decretoAtual);
+  if (navigator.share) { navigator.share({ title:'Decreto ' + decretoAtual.id, text:txt }).catch(function () {}); }
+  else if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(function () { alert('Decreto copiado.'); }, function () {}); }
+  else { alert(txt); }
+});
+
+$('btImprimir').addEventListener('click', function () {
+  if (!decretoAtual) { alert('Conjure uma síntese primeiro.'); return; }
+  window.print();
+});
+
+$('btOcultar').addEventListener('click', function (e) {
+  revelado = !revelado;
+  e.target.textContent = revelado ? 'Malfeito feito' : 'Revelar radar';
+});
+
+$('btEco').addEventListener('click', function () {
+  var semente = sinais.map(function (s, i) { return (s.nome.length + i) % 9 + 1; });
+  var r = ecoDoRadar(semente, 700);
+  $('infoRadar').textContent = r.teoremaSatisfeito
+    ? ('ECO C7/2024 — período ímpar=' + r.periodoImpares + ' par=' + r.periodoPares + '. O fluxo já recicla: o radar parou de trazer informação nova.')
+    : ('ECO C7/2024 — período não detectado em ' + r.termos + ' termos.');
+});
+
+$('btNovoSinal').addEventListener('click', function () {
+  var n = sinais.length + 1;
+  sinais.push(criarSinal({ id:'SIG-' + (n < 10 ? '0' : '') + n, nome:'Cisne negro ' + n,
+    corredor:'Passagem secreta de Hogsmeade', categoria:'Não classificado',
+    acao:'Converter risco disruptivo em posição defensável', origem:'SINTETICO' }));
+  recarregarAgentes(); listarSinais();
+});
+
+$('btLimparSinais').addEventListener('click', function () {
+  sinais = SEMENTE_SINAIS.map(criarSinal);
+  recarregarAgentes(); listarSinais();
+  $('infoRadar').textContent = 'Acervo restaurado — 5 sinais sintéticos.';
+});
+
+$('btRegua').addEventListener('click', pintarRegua);
+$('btRelatorio').addEventListener('click', function () {
+  var p = $('jsonRegua');
+  p.hidden = !p.hidden;
+  if (!p.hidden) p.textContent = JSON.stringify(REGUA, null, 2);
+});
+
+var PARAMS = {
+  'SL2012-C6':{ a:'k', b:'hipóteses retidas', va:'4', vb:'16' },
+  'SL2025-C8':{ a:'k', b:'blocos usados', va:'45', vb:'2000' },
+  'SL2020-G9':{ a:'n (pontos)', b:'— não usado', va:'1000', vb:'' },
+  'SL-A7-IRA':{ a:'base, separada por vírgula', b:'passos', va:'1,3,4', vb:'240' }
+};
+function ajustarParams() {
+  var p = PARAMS[$('invSel').value];
+  $('rotA').textContent = p.a; $('rotB').textContent = p.b;
+  $('pA').value = p.va; $('pB').value = p.vb;
+}
+$('invSel').addEventListener('change', ajustarParams);
+$('btRodarInv').addEventListener('click', function () {
+  var sel = $('invSel').value, a = $('pA').value.trim(), b = $('pB').value.trim(), r;
+  if (sel === 'SL2012-C6') r = verificarFonte(parseInt(a, 10) || 1, parseInt(b, 10) || 0);
+  else if (sel === 'SL2025-C8') r = cobertura(parseInt(a, 10) || 45, b === '' ? null : parseInt(b, 10));
+  else if (sel === 'SL2020-G9') r = margem(parseInt(a, 10) || 1);
+  else r = maxAditiva(a.split(',').map(function (x) { return parseInt(x, 10) || 1; }), parseInt(b, 10) || 240);
+  var p = $('jsonInv'); p.hidden = false; p.textContent = JSON.stringify(r, null, 2);
+});
+
+$('btExportar').addEventListener('click', function () {
+  var blob = new Blob([JSON.stringify({ versao:2, exportadoEm:new Date().toISOString(), decretos:arquivo }, null, 2)],
+    { type:'application/json' });
+  var u = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = u; a.download = 'catedral-decretos-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(u); }, 1500);
+});
+$('btImportar').addEventListener('click', function () { $('arqImport').click(); });
+$('arqImport').addEventListener('change', function (e) {
+  var f = e.target.files && e.target.files[0]; if (!f) return;
+  var fr = new FileReader();
+  fr.onload = function () {
+    try {
+      var j = JSON.parse(fr.result);
+      var lista = Array.isArray(j) ? j : (j.decretos || []);
+      var ids = {}; arquivo.forEach(function (d) { ids[d.id] = 1; });
+      var novos = lista.filter(function (d) { return d && d.id && !ids[d.id]; });
+      arquivo = arquivo.concat(novos);
+      salvarArquivo(); listarArquivo();
+      alert(novos.length + ' decreto(s) importado(s).');
+    } catch (err) { alert('Arquivo inválido.'); }
+    e.target.value = '';
+  };
+  fr.readAsText(f);
+});
+
+/* =======================================================================
+   7b. SERVIDOR LOCAL (opcional)
+   Aberto como arquivo solto, nada disso existe e o app segue 100% offline.
+   Servido pelo servidor.js do Termux, acende o caminho Gemini — e a CHAVE
+   FICA NO SERVIDOR, nunca nesta pagina.
+   ======================================================================= */
+var SERVIDOR = { ativo:false, gemini:false, modelo:null, celula:null };
+var CALIB_CHAVE = 'tictic.calib.v3';
+var CALIB = carregarCalib();
+var CELULA = { job:null, desde:0, decreto:null, timer:null, canal:0, retidos:[] };
+var ARGON_PAPEIS = [['EXAMINADOR', 'I'], ['RELATOR', 'II'], ['AUDITOR', 'III']];
+var QUORUM_UI = [[1, 'A1', 'PROPOSITOR', 'A'], [1, 'B1', 'CONTRAPOSITOR', 'B'], [2, 'B2', 'REFUTADOR-A1', 'B'], [2, 'A2', 'REFUTADOR-B1', 'A'],
+  [3, 'A3', 'DEFENSOR', 'A'], [3, 'B3', 'EXTENSOR', 'B'], [4, 'B4', 'ARBITRO', 'B'], [4, 'A4', 'ADVERSARIO', 'A']];
+var GUARDAS_UI = [['g1', 'exame do enunciado'], ['g2', 'auditoria determinística'], ['g3', 'itens vigiados'], ['g4', 'auditoria por nó'],
+  ['g5', 'dispersão do pacote'], ['g6', 'filtro de canal'], ['g7', 'testemunha independente'], ['g8', 'lastro da síntese']];
+
+function carregarCalib() {
+  try {
+    var j = JSON.parse(localStorage.getItem(CALIB_CHAVE) || '{}'), agora = Date.now(), out = {};
+    Object.keys(j).forEach(function (m) { if (j[m] && j[m].quando && agora - Date.parse(j[m].quando) < 7 * 864e5) out[m] = j[m]; });
+    return out;
+  } catch (e) { return {}; }
+}
+function salvarCalib() { try { localStorage.setItem(CALIB_CHAVE, JSON.stringify(CALIB)); } catch (e) { /* sem armazenamento: vale so nesta sessao */ } }
+function calibrado(m) { return !!(m && CALIB[m] && CALIB[m].aprovado); }
+function curto(m) { return String(m || '—').replace(/^gemini-/, ''); }
+function fmtUSD(v) { return (typeof v === 'number' && isFinite(v)) ? v.toFixed(v < 0.01 ? 4 : 2).replace('.', ',') : 'NÃO MEDIDO'; }
+function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+
+function descreverElenco(c) {
+  if (!c) return '';
+  var t = 'ARGON I/II/III: ' + curto(c.relator) + ' · família A: ' + curto(c.A.modelo) + ' · família B: ' + curto(c.B.modelo) + ' · lei prevista ' + c.leiPrevista + '.';
+  if (c.argonDegradado) t = 'Argon indisponível nesta chave (' + (c.argon.erro || 'sem resposta') + '): exame, relato e auditoria rodam na família A e a célula começa em LEI ' + c.leiPrevista + '. ' + t;
+  return t;
+}
+function sondarServidor(tentativa) {
+  tentativa = tentativa || 0;
+  if (location.protocol === 'file:') { $('statusGemini').textContent = 'Modo arquivo solto: só matriz estática. Rode pelo servidor.js para convocar a célula.'; return Promise.resolve(); }
+  if (typeof fetch !== 'function') { $('statusGemini').textContent = 'Navegador sem fetch: só matriz estática.'; return Promise.resolve(); }
+  return fetch('/api/saude').then(function (r) { return r.json(); }).then(function (j) {
+    if (j.sondagem === 'em andamento' && tentativa < 40) {
+      $('statusGemini').textContent = 'Servidor no ar · sondando os modelos da chave (uma chamada mínima por modelo)…';
+      setTimeout(function () { sondarServidor(tentativa + 1); }, 3000);
+      return;
+    }
+    SERVIDOR = { ativo:true, gemini:!!j.gemini, modelo:j.modelo || null, celula:j.celula || null };
+    if (SERVIDOR.gemini && SERVIDOR.celula) {
+      $('btCelula').hidden = false;
+      $('btCalibrar').hidden = false;
+      $('statusGemini').textContent = 'Célula pronta. ' + descreverElenco(SERVIDOR.celula) +
+        (calibrado(SERVIDOR.celula.relator) ? ' O relator passou 7/7 nas sondas.' : ' Até o relator passar 7/7 nas sondas cegas, o selo registra RELATOR NAO CALIBRADO.');
+      $('statusCalib').textContent = 'Calibração por modelo, guardada 7 dias neste aparelho. Só o relator precisa de 7/7 para o selo; as famílias ficam medidas.';
+      $('rodapeTxt').textContent = 'Os pilares podem vir da célula UROBOROS — 3 Argon e 8 nós em duas famílias — sempre rotulados. A chave fica no servidor; nada dela chega a este aparelho.';
+      desenharCalib();
+    } else {
+      $('statusGemini').textContent = 'Servidor no ar, mas sem modelo: ' + (j.motivo || 'sem GEMINI_API_KEY') + '. Só matriz estática.';
+    }
+  }).catch(function () {
+    $('statusGemini').textContent = 'Sem servidor: só matriz estática. É o modo honesto, não um erro.';
+  });
+}
+
+/* ---------- painel da celula ---------- */
+function cartao(id, rotulo, papel, modelo, argon) {
+  var c = el('div', 'no' + (argon ? ' argon' : ''));
+  c.id = 'no-' + id; c.setAttribute('data-e', 'aguardando');
+  c.appendChild(el('span', 'i', rotulo));
+  c.appendChild(el('span', 'p', papel));
+  c.appendChild(el('span', 'm', curto(modelo)));
+  c.appendChild(el('span', 'e', 'aguardando'));
+  return c;
+}
+function montarPainel(c) {
+  var ar = $('argons'), qu = $('quorum'), gu = $('guardas');
+  ar.textContent = ''; qu.textContent = ''; gu.textContent = '';
+  ARGON_PAPEIS.forEach(function (x) { ar.appendChild(cartao(x[0], 'ARGON ' + x[1], x[0], c ? c[x[0].toLowerCase()] : null, true)); });
+  var rod = 0;
+  QUORUM_UI.forEach(function (x) {
+    if (x[0] !== rod) { rod = x[0]; qu.appendChild(el('span', 'rod', 'RODADA ' + rod + (rod === 1 ? ' · testemunhas independentes' : ''))); }
+    qu.appendChild(cartao(x[1], x[1] + ' · fam. ' + x[3], x[2], c ? (x[3] === 'A' ? c.A.modelo : c.B.modelo) : null, false));
+  });
+  GUARDAS_UI.forEach(function (g, i) {
+    var li = el('li'); li.id = g[0];
+    li.appendChild(el('span', 'n', String(i + 1)));
+    var t = el('span'); t.appendChild(el('b', null, g[1])); t.appendChild(document.createTextNode(' — aguardando'));
+    li.appendChild(t); gu.appendChild(li);
+  });
+  $('celRoster').textContent = c ? ('3 Argon (' + curto(c.relator) + ') · 8 nós · ' + curto(c.A.modelo) + ' + ' + curto(c.B.modelo)) : '3 Argon · 8 nós · 2 famílias';
+  renderFMA(c ? c.leiPrevista : null, c ? c.modos : null);
+}
+function guarda(id, texto) {
+  var li = $(id); if (!li) return;
+  var t = li.lastChild; t.textContent = '';
+  var g = GUARDAS_UI.filter(function (x) { return x[0] === id; })[0];
+  t.appendChild(el('b', null, g ? g[1] : id)); t.appendChild(document.createTextNode(' — ' + texto));
+}
+function renderFMA(lei, modos) {
+  var L = $('fmaLei');
+  L.textContent = lei || '—';
+  L.className = lei === 'NORMAL' ? 'man' : lei === 'ALTERNATE' ? 'blq' : lei ? 'pare' : '';
+  [['fmaFato', 'FATO'], ['fmaNum', 'NUMERO'], ['fmaInf', 'INFERENCIA'], ['fmaSin', 'SINTESE']].forEach(function (x) {
+    var v = modos ? modos[x[1]] : '—', b = $(x[0]);
+    b.textContent = String(v || '—').replace('/', '/​');
+    b.className = /^MANAGED/.test(v) ? 'man' : /^SELECTED/.test(v) ? 'sel' : v && v !== '—' ? 'blq' : '';
+  });
+}
+function marcarNo(id, estado, extra) {
+  var c = $('no-' + id); if (!c) return;
+  c.setAttribute('data-e', estado);
+  var rot = { ativo:'deliberando', pronto:'pronto', devolvido:'devolvido', isolado:'isolado', erro:'sem resposta', falhou:'falhou', limpo:'sem defeito', rejeitado:'rejeitado' }[estado] || estado;
+  c.querySelector('.e').textContent = rot + (extra ? ' · ' + extra : '');
+}
+function telegrama(rotulo, ev) {
+  if (!ev.texto) return;
+  var t = el('div', 'tele');
+  t.appendChild(el('span', 'h', rotulo + ' · ' + curto(ev.modelo) + (ev.via ? ' via ' + ev.via : '') + (ev.cabecalho ? ' · ' + ev.cabecalho : '')));
+  if (ev.achados && ev.achados.length) t.appendChild(el('span', 'a', 'Polo V: ' + ev.achados.join(' | ')));
+  t.appendChild(el('span', 'x', String(ev.texto).slice(0, 1600)));
+  $('telegramas').appendChild(t);
+}
+function tratarEvento(ev) {
+  if (ev.t === 'inicio') { montarPainel(ev.roster); return; }
+  if (ev.t === 'lei') {
+    renderFMA(ev.lei, ev.modos);
+    if (ev.de) $('statusCelula').textContent = 'Lei ' + ev.de + ' → ' + ev.lei + ': ' + (ev.motivo || '') + '.';
+    return;
+  }
+  if (ev.t === 'anuncio') { $('statusCelula').textContent = ev.texto; return; }
+  if (ev.t === 'itens') { guarda('g3', ev.itens.length + ' no enunciado' + (ev.itens.length ? ' (' + ev.itens.slice(0, 4).join('; ') + ')' : '') + '; os da célula entram a cada nó'); return; }
+  if (ev.t === 'argon') {
+    marcarNo(ev.papel, ev.estado, ev.erro ? ev.erro.slice(0, 60) : (ev.ms ? (ev.ms / 1000).toFixed(1) + ' s' : ''));
+    if (ev.papel === 'EXAMINADOR' && ev.estado !== 'ativo') guarda('g1', ev.estado === 'pronto' ? 'apontou defeito no enunciado; vale como advertência para os 8 nós' : ev.estado === 'limpo' ? 'sem defeito nas cinco classes' : 'falhou: ' + (ev.erro || ''));
+    if (ev.papel === 'AUDITOR' && ev.estado === 'rejeitado') $('statusCelula').textContent = 'Auditor rejeitado: ' + ev.erro;
+    if (ev.texto) telegrama('ARGON ' + ({ EXAMINADOR:'I', RELATOR:'II', AUDITOR:'III' }[ev.papel] || '') + ' ' + ev.papel + (ev.nota ? ' — ' + ev.nota : ''), ev);
+    return;
+  }
+  if (ev.t === 'no') {
+    marcarNo(ev.id, ev.estado, ev.estado === 'pronto' && ev.devolvido ? 'após devolução' : ev.erro ? ev.erro.slice(0, 50) : '');
+    if (ev.texto) telegrama(ev.id + ' ' + ev.papel, ev);
+    return;
+  }
+  if (ev.t === 'canal') {
+    CELULA.canal += ev.filtradas;
+    ev.itens.forEach(function (x) { if (CELULA.retidos.indexOf(x) < 0) CELULA.retidos.push(x); });
+    guarda('g6', CELULA.canal + ' frase(s) chegaram como referência nua: ' + CELULA.retidos.slice(0, 5).join('; '));
+    return;
+  }
+  if (ev.t === 'dispersao') { guarda('g5', ev.itens.map(function (x) { return x.rotulo + ' ganhou ' + x.acretados.join(', '); }).join(' | ') + ' — para de atravessar'); return; }
+  if (ev.t === 'lastro') { guarda('g8', (ev.fase === 'rascunho' ? 'rascunho do relator: ' : 'texto final: ') + (ev.achados.length ? ev.achados.length + ' achado(s) — ' + ev.achados.slice(0, 2).join(' | ') : 'limpo')); return; }
+  if (ev.t === 'resultado') {
+    var g = ev.guardas || {};
+    if (g.auditoria) {
+      guarda('g2', g.auditoria.graves + ' violação(ões) de procedência nas primeiras respostas');
+      guarda('g4', 'devolvidos: ' + (g.auditoria.devolvidos.join(', ') || 'nenhum') + ' · isolados: ' + (g.auditoria.isolados.join(', ') || 'nenhum'));
+    }
+    if (g.vigiados) guarda('g3', g.vigiados.enunciado + ' no enunciado · ' + g.vigiados.celula + ' invocados pela célula');
+    if (g.canal && !g.canal.filtradas) guarda('g6', 'nada precisou ser retido');
+    if (g.dispersao && !g.dispersao.length) guarda('g5', 'nenhum item cresceu entre rodadas');
+    if (g.testemunha) guarda('g7', 'com lastro: ' + (g.testemunha.comLastro.join('; ') || 'nenhum') + ' · sem lastro: ' + (g.testemunha.semLastro.join('; ') || 'nenhum') + ' · ecos: ' + g.testemunha.ecos);
+    if (g.lastro) guarda('g8', 'rascunho ' + g.lastro.rascunho + ' achado(s) → final ' + g.lastro.final + ' · auditor ' + g.lastro.auditor +
+      (ev.achados && ev.achados.length ? ' · ' + ev.achados.slice(0, 2).join(' | ') : ''));
+    renderFMA(ev.lei, ev.modos);
+    aplicarCelula(ev);
+    $('statusCelula').textContent = (ev.partes ? 'Pilares reescritos pela célula' : 'Nenhum texto de IA sustentado (' + (ev.motivo || ev.sintese) + '); fica a matriz estática') +
+      ' · lei ' + ev.lei + ' · custo medido US$ ' + fmtUSD(ev.custo && ev.custo.medido) + (ev.custo && ev.custo.incompleto ? ' (parcial)' : '') +
+      (ev.custo ? ' em ' + ev.custo.chamadas + ' chamadas' : '') + '.';
+    $('statusGemini').textContent = ev.partes ? ('Texto do relator ' + curto(ev.relator) + ', auditado por ' + curto(ev.auditor) + '. ' +
+      (calibrado(ev.relator) ? 'O relator passou 7/7 nas sondas.' : 'Relator ainda NÃO calibrado — o selo registra isso.')) : $('statusGemini').textContent;
+    return;
+  }
+  if (ev.t === 'erro') { $('statusCelula').textContent = 'A célula parou: ' + ev.erro + (ev.custo ? ' · custo medido US$ ' + fmtUSD(ev.custo.medido) : ''); }
+}
+function aplicarCelula(ev) {
+  var d = CELULA.decreto; if (!d) return;
+  d.celula = { lei:ev.lei, sintese:ev.sintese, relator:ev.relator || null, auditor:ev.auditor || null, semLastro:ev.semLastro || 0,
+    isolados:ev.isolados || [], argonDegradado:!!ev.argonDegradado, custo:ev.custo ? ev.custo.medido : null, digest:ev.digest || [], achados:ev.achados || [] };
+  if (ev.partes && ev.partes.length === 4) {
+    d.pilares = { arte:ev.partes[0], filosofia:ev.partes[1], psicologia:ev.partes[2], vendas:ev.partes[3] };
+    d.fonteTexto = 'CELULA:' + ev.relator;
+    d.modeloTexto = ev.relator;
+  }
+  d.calibrado = calibrado(d.modeloTexto);
+  d.calibracao = d.modeloTexto ? (CALIB[d.modeloTexto] ? CALIB[d.modeloTexto].acertos + '/' + CALIB[d.modeloTexto].total + ' em ' + d.modeloTexto : 'nao calibrado') : '—';
+  d.selo = selar(d);
+  if (decretoAtual === d) mostrarDecreto(d);
+}
+function corpoCelula(d) {
+  var m = d.pilaresMatriz || d.pilares;
+  return { horizonte:d.horizonte, ala:d.ala, ceu:d.ceu, zeitgeist:d.zeit, sinal:d.sinal, origem:d.sinalOrigem, fonte:d.sinalFonte || '',
+    criterio:d.criterio || '', dataRes:d.dataRes || '', confianca:d.confianca,
+    matriz:{ arte:(d.grimorio && d.grimorio.setor ? d.grimorio.setor + ': ' : '') + m.arte,
+      filosofia:(d.grimorio && d.grimorio.filosofia ? d.grimorio.filosofia + ': ' : '') + m.filosofia,
+      psicologia:m.psicologia, vendas:m.vendas } };
+}
+function liberarCelula() {
+  CELULA.job = null;
+  var b = $('btCelula'); b.disabled = false; b.textContent = 'Convocar a célula UROBOROS';
+}
+function puxarCelula() {
+  if (!CELULA.job) return;
+  fetch('/api/fluxo?job=' + encodeURIComponent(CELULA.job) + '&desde=' + CELULA.desde)
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (j.erro) { $('statusCelula').textContent = 'Deliberação perdida: ' + j.erro; liberarCelula(); return; }
+      (j.eventos || []).forEach(tratarEvento);
+      CELULA.desde += (j.eventos || []).length;
+      if (j.fim) { liberarCelula(); return; }
+      CELULA.timer = setTimeout(puxarCelula, 1200);
+    }).catch(function () {
+      $('statusCelula').textContent = 'A conexão oscilou; tentando de novo…';
+      CELULA.timer = setTimeout(puxarCelula, 4000);
+    });
+}
+$('btCelula').addEventListener('click', function () {
+  if (!decretoAtual || CELULA.job) return;
+  var d = decretoAtual, b = $('btCelula');
+  b.disabled = true; b.textContent = 'A célula está deliberando…';
+  CELULA = { job:null, desde:0, decreto:d, timer:null, canal:0, retidos:[] };
+  $('painelCelula').hidden = false; $('telegramas').textContent = '';
+  montarPainel(SERVIDOR.celula);
+  $('statusCelula').textContent = 'Convocando a célula…';
+  fetch('/api/celula', { method:'POST', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify(corpoCelula(d)) })
+    .then(function (r) { return r.json().then(function (j) { return { s:r.status, j:j }; }); })
+    .then(function (x) {
+      if (x.s !== 202) { $('statusCelula').textContent = 'Recusado: ' + ((x.j && x.j.erro) || ('HTTP ' + x.s)); liberarCelula(); return; }
+      CELULA.job = x.j.job; b.disabled = true;
+      $('statusCelula').textContent = 'Deliberando · estimativa de pré-voo US$ ' + fmtUSD(x.j.estimativa && x.j.estimativa.usd) +
+        ' (teto US$ ' + fmtUSD(SERVIDOR.celula && SERVIDOR.celula.teto) + '). O custo medido sai no fim.';
+      puxarCelula();
+    }).catch(function (e) { $('statusCelula').textContent = 'Falha de rede: ' + e.message; liberarCelula(); });
+});
+
+/* ---------- calibracao por modelo ---------- */
+function funcaoDe(m) {
+  var c = SERVIDOR.celula; if (!c) return '';
+  var f = [];
+  if (c.relator === m) f.push('ARGON I/II/III');
+  if (c.A.modelo === m) f.push('família A');
+  if (c.B.modelo === m) f.push('família B');
+  return f.join(' + ');
+}
+function desenharCalib() {
+  var t = $('tabCalibCel'), c = SERVIDOR.celula; if (!t || !c) return;
+  var corpo = t.querySelector('tbody'); corpo.textContent = '';
+  var ms = []; [c.relator, c.A.modelo, c.B.modelo].forEach(function (m) { if (m && ms.indexOf(m) < 0) ms.push(m); });
+  ms.forEach(function (m) {
+    var k = CALIB[m], tr = el('tr');
+    tr.appendChild(el('td', null, curto(m)));
+    tr.appendChild(el('td', null, funcaoDe(m)));
+    tr.appendChild(el('td', null, k ? (k.interrompida ? 'interrompida' : k.acertos + '/' + k.total + (k.aprovado ? ' ✓' : ' ✗')) : '—'));
+    tr.appendChild(el('td', null, k ? new Date(k.quando).toLocaleDateString('pt-BR') : 'nunca'));
+    corpo.appendChild(tr);
+  });
+  t.hidden = false;
+}
+$('btCalibrar').addEventListener('click', function () {
+  var c = SERVIDOR.celula; if (!c) return;
+  var modelos = [];
+  [c.relator, c.A.modelo, c.B.modelo].forEach(function (m) { if (m && modelos.indexOf(m) < 0) modelos.push(m); });
+  var b = $('btCalibrar'); b.disabled = true; b.textContent = 'Calibrando…';
+  var custo = 0, i = 0;
+  function proximoModelo() {
+    if (i >= modelos.length) {
+      b.disabled = false; b.textContent = 'Calibrar a célula com as 7 sondas cegas';
+      $('statusCalib').textContent = modelos.map(function (m) { var k = CALIB[m]; return curto(m) + ' ' + (k.interrompida ? 'interrompida' : k.acertos + '/' + k.total); }).join(' · ') +
+        ' · custo medido US$ ' + fmtUSD(custo) + '. ' + (calibrado(c.relator) ? 'Relator aprovado. Isso NÃO garante acerto em foresight — mede só que ele não erra o que tem gabarito.' : 'Relator NÃO aprovado: o selo continua com RELATOR NAO CALIBRADO.');
+      var p = $('jsonRegua'); p.hidden = false; p.textContent = JSON.stringify(CALIB, null, 2);
+      desenharCalib();
+      if (decretoAtual && decretoAtual.fonteTexto && decretoAtual.fonteTexto.indexOf('CELULA') === 0) {
+        decretoAtual.calibrado = calibrado(decretoAtual.modeloTexto); decretoAtual.selo = selar(decretoAtual); mostrarDecreto(decretoAtual);
+      }
+      return;
+    }
+    var m = modelos[i++], res = [], k = 0;
+    function fechar(interrompida) {
+      var acertos = res.filter(function (x) { return x.acertou; }).length;
+      CALIB[m] = { quando:new Date().toISOString(), modelo:m, acertos:acertos, total:SONDAS.length,
+        aprovado:(!interrompida && acertos === SONDAS.length), interrompida:interrompida || null, resultados:res };
+      salvarCalib(); desenharCalib(); proximoModelo();
+    }
+    function proximaSonda() {
+      if (k >= SONDAS.length) { fechar(null); return; }
+      var s = SONDAS[k++];
+      $('statusCalib').textContent = curto(m) + ': sonda ' + k + ' de ' + SONDAS.length + '. A correção é feita aqui, pelo gabarito local.';
+      fetch('/api/sondar', { method:'POST', headers:{ 'Content-Type':'application/json' },
+        body:JSON.stringify({ modelo:m, sonda:{ id:s.id, pergunta:s.pergunta } }) })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (typeof j.custo === 'number') custo += j.custo;
+          if (j.erro) { fechar(j.erro); return; }
+          var cr = corrigirSonda(s.id, j.texto);
+          res.push({ id:s.id, gabarito:cr.gabarito, acertou:cr.acertou, resposta:(j.texto || '').slice(0, 160) });
+          proximaSonda();
+        }).catch(function (e) { fechar(e.message); });
+    }
+    proximaSonda();
+  }
+  proximoModelo();
+});
+
+/* poupa bateria: congela o radar quando a aba sai de cena */
+document.addEventListener('visibilitychange', function () { rodando = !document.hidden; });
+window.addEventListener('resize', function () { dimensionar(); recarregarAgentes(); });
+
+/* =======================================================================
+   7c. BRASAO DA CATEDRAL E MANCHA DE RORSCHACH
+   Brasao proprio, desenhado aqui: arco ogival, quadrifolio gotico com Psi
+   (psicologia), pena (arte), lanterna (filosofia), chave (sala precisa) e
+   ampulheta (horizonte) no centro; dendritos de neuronio nas laterais e o
+   lema NOSCE TE IPSUM. Atras dele, uma mancha de Rorschach espelhada que
+   muda devagar; tocar no brasao gera outra.
+   ======================================================================= */
+function brasaoSVG(p, animado) {
+  var G = 'url(#' + p + 'ouro)', O = '#D4AF37', s = '';
+  s += '<svg viewBox="0 0 260 322" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Brasão da Catedral TICTIC">';
+  s += '<defs>';
+  s += '<linearGradient id="' + p + 'ouro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6E3A1"/><stop offset=".45" stop-color="#D4AF37"/><stop offset="1" stop-color="#9C7A1C"/></linearGradient>';
+  s += '<radialGradient id="' + p + 'campo" cx=".5" cy=".38" r=".75"><stop offset="0" stop-color="#7A1630"/><stop offset=".6" stop-color="#4A0C1A"/><stop offset="1" stop-color="#27060D"/></radialGradient>';
+  s += '<radialGradient id="' + p + 'vitral" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#F6E3A1" stop-opacity=".95"/><stop offset=".55" stop-color="#C2384F" stop-opacity=".8"/><stop offset="1" stop-color="#3B0A14" stop-opacity=".95"/></radialGradient>';
+  s += '<filter id="' + p + 'brilho" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
+  s += '</defs>';
+  function lado(espelho) {
+    var t = espelho ? ' transform="translate(260,0) scale(-1,1)"' : '', id = p + (espelho ? 'nd' : 'ne'), o = '';
+    o += '<g' + t + ' fill="none" stroke="' + O + '" stroke-linecap="round" filter="url(#' + p + 'brilho)">';
+    o += '<path id="' + id + '1" d="M66,128 C46,118 34,100 22,84" stroke-width="2.8"/>';
+    o += '<path d="M44,116 C34,120 22,128 10,126" stroke-width="1.7"/>';
+    o += '<path d="M32,100 C26,92 28,82 22,70" stroke-width="1.5"/>';
+    o += '<path id="' + id + '2" d="M68,206 C48,212 34,226 24,242" stroke-width="2.5"/>';
+    o += '<path d="M44,214 C34,210 22,212 12,206" stroke-width="1.5"/>';
+    o += '<path d="M34,228 C26,232 22,242 14,250" stroke-width="1.3"/>';
+    o += '</g><g' + t + ' fill="' + O + '">';
+    [[22, 84, 3.2], [10, 126, 2.4], [22, 70, 2.2], [24, 242, 3], [12, 206, 2.2], [14, 250, 2]].forEach(function (c) {
+      o += '<circle cx="' + c[0] + '" cy="' + c[1] + '" r="' + c[2] + '"/>';
+    });
+    o += '</g>';
+    if (animado) {
+      o += '<g' + t + '>';
+      o += '<circle r="2.4" fill="#FFF3C4"><animateMotion dur="3.6s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#' + id + '1"/></animateMotion><animate attributeName="opacity" values="0;1;1;0" dur="3.6s" repeatCount="indefinite"/></circle>';
+      o += '<circle r="2.1" fill="#FFF3C4"><animateMotion dur="4.4s" begin="1.3s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#' + id + '2"/></animateMotion><animate attributeName="opacity" values="0;1;1;0" dur="4.4s" begin="1.3s" repeatCount="indefinite"/></circle>';
+      o += '</g>';
+    }
+    return o;
+  }
+  s += lado(false) + lado(true);
+  s += '<g transform="translate(130,34)"><circle r="24" fill="url(#' + p + 'vitral)" stroke="' + G + '" stroke-width="2.5">';
+  if (animado) s += '<animate attributeName="opacity" values=".72;1;.72" dur="5s" repeatCount="indefinite"/>';
+  s += '</circle>';
+  for (var i = 0; i < 8; i++) {
+    var a = i * Math.PI / 4;
+    s += '<circle cx="' + (12 * Math.cos(a)).toFixed(2) + '" cy="' + (12 * Math.sin(a)).toFixed(2) + '" r="6" fill="none" stroke="' + O + '" stroke-width="1.2"/>';
+  }
+  s += '<circle r="4.5" fill="' + O + '"/></g>';
+  s += '<path d="M130,62 C158,74 196,92 196,112 V172 C196,214 170,244 130,262 C90,244 64,214 64,172 V112 C64,92 102,74 130,62 Z" fill="url(#' + p + 'campo)" stroke="' + G + '" stroke-width="4.5"/>';
+  s += '<path d="M130,73 C154,83 186,99 186,116 V172 C186,207 164,233 130,250 C96,233 74,207 74,172 V116 C74,99 106,83 130,73 Z" fill="none" stroke="' + O + '" stroke-width="1" opacity=".55"/>';
+  s += '<path d="M104,134 A26,26 0 0 1 156,134 A26,26 0 0 1 156,186 A26,26 0 0 1 104,186 A26,26 0 0 1 104,134 Z" fill="rgba(14,2,5,.55)" stroke="' + G + '" stroke-width="2.6"/>';
+  s += '<text x="130" y="131" text-anchor="middle" font-family="Georgia,serif" font-size="26" font-weight="700" fill="' + G + '">Ψ</text>';
+  s += '<g transform="translate(91,160) rotate(-35)" fill="' + O + '"><path d="M0,-13 C7,-7 6,4 0,13 C-6,4 -7,-7 0,-13 Z"/><path d="M0,-11 V15" stroke="#27060D" stroke-width="1"/></g>';
+  s += '<g transform="translate(169,160)" fill="none" stroke="' + O + '" stroke-width="1.6"><circle cy="-13" r="2.6"/><path d="M-6,-9 H6 L4,-6 H-4 Z" fill="' + O + '"/><rect x="-5" y="-6" width="10" height="15" rx="1.5"/>';
+  s += '<path d="M0,6 C-3,3 -2,-1 0,-3 C2,-1 3,3 0,6 Z" fill="#FFF3C4" stroke="none">';
+  if (animado) s += '<animate attributeName="opacity" values=".6;1;.75;1;.6" dur="2.4s" repeatCount="indefinite"/>';
+  s += '</path><path d="M-6,9 H6" stroke-width="2"/></g>';
+  s += '<g transform="translate(130,199)" fill="none" stroke="' + O + '" stroke-width="2"><circle cx="-9" r="4.5"/><path d="M-4.5,0 H11 M7,0 V4 M10,0 V3.2"/></g>';
+  s += '<g transform="translate(130,160)"><path d="M-7,-10 H7 L0,0 L7,10 H-7 L0,0 Z" fill="rgba(246,227,161,.18)" stroke="' + O + '" stroke-width="1.6" stroke-linejoin="round"/><path d="M-9,-11 H9 M-9,11 H9" stroke="' + O + '" stroke-width="2"/><path d="M-3,6 L0,3 L3,6 Z" fill="' + O + '"/></g>';
+  s += '<path d="M24,282 L40,276 L34,296 Z" fill="#9C7A1C"/><path d="M236,282 L220,276 L226,296 Z" fill="#9C7A1C"/>';
+  s += '<path d="M38,270 Q130,298 222,270 L226,290 Q130,318 34,290 Z" fill="' + G + '" stroke="#5E0D20" stroke-width="1"/>';
+  s += '<path id="' + p + 'lema" d="M44,284 Q130,310 216,284" fill="none"/>';
+  s += '<text font-family="Cinzel,Georgia,serif" font-size="12.5" font-weight="700" letter-spacing="3" fill="#3B0A14" text-anchor="middle"><textPath href="#' + p + 'lema" startOffset="50%">NOSCE TE IPSUM</textPath></text>';
+  s += '</svg>';
+  return s;
+}
+
+var REDUZIR = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+var mancha = { gotas:[], t:0, ultimo:0, cv:null, ctx:null, off:null, octx:null, img:null, W:176, H:132 };
+function suave(a, b, x) { var t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
+var LEGENDAS = ['Mancha de Rorschach · toque no brasão: que forma você vê?',
+  'O que você vê diz mais de você do que da mancha.',
+  'Projeção: a mente completa o que falta.',
+  'Duas metades iguais. Uma pergunta só: o que é isto?'];
+var legendaN = 0;
+
+function semearMancha() {
+  var n = 13 + Math.floor(Math.random() * 6), i;
+  mancha.gotas = [];
+  for (i = 0; i < n; i++) {
+    mancha.gotas.push({ x:0.10 + Math.random() * 0.36, y:0.12 + Math.random() * 0.76, r:0.035 + Math.random() * 0.075,
+      ax:0.01 + Math.random() * 0.03, ay:0.01 + Math.random() * 0.03, f:0.15 + Math.random() * 0.35, fase:Math.random() * 6.283 });
+  }
+}
+function dimensionarMancha() {
+  if (!mancha.cv) return;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  mancha.cv.width = Math.round((mancha.cv.clientWidth || 360) * dpr);
+  mancha.cv.height = Math.round((mancha.cv.clientHeight || 300) * dpr);
+}
+function prepararMancha() {
+  try {
+    var cv = $('mancha'); if (!cv || !cv.getContext) return false;
+    var ctx = cv.getContext('2d'); if (!ctx || typeof ctx.drawImage !== 'function') return false;
+    var off = document.createElement('canvas'); off.width = mancha.W; off.height = mancha.H;
+    var octx = off.getContext && off.getContext('2d');
+    if (!octx || typeof octx.createImageData !== 'function') return false;
+    var img = octx.createImageData(mancha.W, mancha.H);
+    if (!img || !img.data) return false;
+    mancha.cv = cv; mancha.ctx = ctx; mancha.off = off; mancha.octx = octx; mancha.img = img;
+    dimensionarMancha(); semearMancha(); return true;
+  } catch (e) { return false; }
+}
+function pintarMancha(t) {
+  var W = mancha.W, H = mancha.H, d = mancha.img.data, g = mancha.gotas, k, x, y, f, dx, dy, p, q, r, gg, b, a, rr;
+  var px = [], py = [], pr = [];
+  for (k = 0; k < g.length; k++) {
+    px.push((g[k].x + g[k].ax * Math.sin(t * g[k].f + g[k].fase)) * W);
+    py.push((g[k].y + g[k].ay * Math.cos(t * g[k].f * 0.8 + g[k].fase)) * H);
+    rr = g[k].r * H; pr.push(rr * rr);
+  }
+  for (y = 0; y < H; y++) {
+    for (x = 0; x < W / 2; x++) {
+      f = 0;
+      for (k = 0; k < px.length; k++) { dx = x - px[k]; dy = y - py[k]; f += pr[k] / (dx * dx + dy * dy + 0.5); }
+      /* borda macia: tinta escura por dentro, um halo dourado fraco na beirada */
+      var tin = suave(0.9, 1.35, f), aro = suave(0.66, 0.92, f) * (1 - tin);
+      a = tin * 118 + aro * 52;
+      if (a < 1) { r = 0; gg = 0; b = 0; a = 0; }
+      else { r = (14 * tin * 118 + 212 * aro * 52) / a; gg = (2 * tin * 118 + 175 * aro * 52) / a; b = (6 * tin * 118 + 55 * aro * 52) / a; }
+      p = (y * W + x) * 4; q = (y * W + (W - 1 - x)) * 4;
+      d[p] = r; d[p + 1] = gg; d[p + 2] = b; d[p + 3] = a;
+      d[q] = r; d[q + 1] = gg; d[q + 2] = b; d[q + 3] = a;
+    }
+  }
+  mancha.octx.putImageData(mancha.img, 0, 0);
+  var c = mancha.ctx, cw = mancha.cv.width, ch = mancha.cv.height, larg = cw * 0.94, alt = larg * H / W;
+  if (alt > ch) { alt = ch; larg = alt * W / H; }
+  c.clearRect(0, 0, cw, ch);
+  c.imageSmoothingEnabled = true;
+  if ('filter' in c) c.filter = 'blur(' + Math.round(2 * Math.min(window.devicePixelRatio || 1, 2)) + 'px)';
+  c.drawImage(mancha.off, (cw - larg) / 2, (ch - alt) / 2, larg, alt);
+  if ('filter' in c) c.filter = 'none';
+}
+function animarMancha(ts) {
+  if (!mancha.cv) return;
+  if (rodando && ts - mancha.ultimo > 110) { mancha.ultimo = ts; mancha.t += 0.11; pintarMancha(mancha.t); }
+  requestAnimationFrame(animarMancha);
+}
+function ligarBrasao() {
+  var bt = $('brasao');
+  bt.innerHTML = brasaoSVG('br-', !REDUZIR);
+  var ma = $('marcaAgua'); if (ma) ma.innerHTML = brasaoSVG('pm-', false);
+  var svg = bt.querySelector('svg');
+  if (REDUZIR && svg && typeof svg.pauseAnimations === 'function') svg.pauseAnimations();
+  var temMancha = prepararMancha();
+  if (temMancha) { pintarMancha(0); if (!REDUZIR) requestAnimationFrame(animarMancha); }
+  bt.addEventListener('click', function () {
+    legendaN = (legendaN + 1) % LEGENDAS.length;
+    $('legendaMancha').textContent = LEGENDAS[legendaN];
+    if (temMancha) { semearMancha(); mancha.t = 0; pintarMancha(0); }
+  });
+  window.addEventListener('resize', function () { if (temMancha) { dimensionarMancha(); pintarMancha(mancha.t); } });
+}
+
+/* =======================================================================
+   8. PARTIDA — ja entrega tudo pronto, sem toque nenhum
+   ======================================================================= */
+pintarRegua();
+dimensionar();
+recarregarAgentes();
+listarSinais();
+listarArquivo();
+ajustarParams();
+(function () {
+  var d = new Date(); d.setMonth(d.getMonth() + 6);
+  $('dataRes').value = d.toISOString().slice(0, 10);
+})();
+conjurar();
+desenhar();
+ligarBrasao();
+sondarServidor();
+
+})();
+</script>
+</body>
+</html>
